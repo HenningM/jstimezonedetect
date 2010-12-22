@@ -264,7 +264,7 @@ function basic_timezone_info() {
 		// positive is southern, negative is northern hemisphere
 		south_hemisphere = (std_time_offset - daylight_time_offset >= 0 ? true : false);
 		
-		if (south_hemisphere >= 0) {
+		if (south_hemisphere) {
 			std_time_offset = daylight_time_offset;
 		}
 		
