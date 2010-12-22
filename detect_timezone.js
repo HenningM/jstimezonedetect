@@ -301,9 +301,9 @@ function date_is_south_dst(date) {
 }
 
 /**
- * Same as TimeZone but is used to signify that there really is no olsen
+ * Same as TimeZone but is used to signify that there really is no Olsen
  * database counterpart to this timezone. Usually you would have to live
- * on a boat to be able to live in these timezones.
+ * on a non-moving boat to be able to live in these timezones.
  */
 function NonOlsenTimeZone(offset, tz_name, uses_dst) {
 	this.utc_offset = offset;
