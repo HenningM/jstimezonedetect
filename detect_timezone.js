@@ -1,6 +1,103 @@
-/* Original script by Josh Fraser (http://www.onlineaspect.com)
-   Continued by Jon Nylander jon at pageloom.com
-   According to both of us, you are absolutely free to do whatever you want with this code*/
+/* 
+ * Original script by Josh Fraser (http://www.onlineaspect.com)
+ * Continued by Jon Nylander jon at pageloom dot com
+ * According to both of us, you are absolutely free to do whatever 
+ * you want with this code.
+ * 
+ * This code is currently maintained at bitbucket.org as jsTimezoneDetect.
+ */
+
+
+/**
+ * A simple object containing information of utc_offset, which Olsen timezone key to use, 
+ * and if the timezone cares about daylight savings or not.
+ * 
+ * @constructor
+ * @param {string} offset - for example '-11:00'
+ * @param {string} olsen_tz - the olsen Identifier, such as "America/Denver"
+ * @param {boolean} uses_dst - flag for whether the time zone somehow cares about daylight savings.
+ */
+function TimeZone(offset, olsen_tz, uses_dst) {
+	this.utc_offset = offset;
+	this.olsen_tz = olsen_tz;
+	this.uses_dst = uses_dst;
+}
+
+/**
+ * Prints out the result.
+ * But before it does that, it calls this.ambiguity_check.
+ */
+TimeZone.prototype.display = function() {
+	this.ambiguity_check();
+	var response_text = '<b>UTC-offset</b>: ' + this.utc_offset + '<br/>';
+	response_text += '<b>Olsen database name</b>: ' + this.olsen_tz + '<br/>';
+	response_text += '<b>Daylight Savings</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br>'
+	
+	return response_text;
+}
+
+/**
+ * First checks whether there is any chance that the timezone in question
+ * has similar counterparts. (I.e timezones which are in the same hemisphere, and
+ * use daylight savings, but start they're daylight savings on different dates).
+ * 
+ * If we have a timezone which may in fact be ambigous, such as 'America/Denver',
+ * we check the date specified for 'America/Denver' in the dst_comparators object.
+ * If that date turns out to NOT be daylight savings time, we check the next possible
+ * time zone, namely 'America/Chihuahua' and its specified daylight davings start date.
+ * If the dst_comparators date for 'America/Chihuahua' resolves to DST - we switch.
+ */
+TimeZone.prototype.ambiguity_check = function() {
+	if (typeof(olsen_ambiguity[this.olsen_tz]) == 'undefined') {
+		return;
+	} 
+	
+	var local_ambiguity_list = olsen_ambiguity[this.olsen_tz];
+	var length = local_ambiguity_list.length
+	
+	for (var i = 0; i < length; i++) {
+		var tz = local_ambiguity_list[i]
+		var north = (dst_comparators[tz][0]) == 'n' ? true : false;
+		
+		if (north) {
+			if (date_is_northern_dst(dst_comparators[tz][1])) {
+				this.olsen_tz = tz;
+				return;
+			} 
+		}
+		else {
+			if (date_is_south_dst(dst_comparators[tz][1])) {
+				this.olsen_tz = tz;
+				return;
+			}
+		}
+			
+	}
+}
+
+/**
+ * Same as TimeZone but is used to signify that there really is no Olsen
+ * database counterpart to this timezone. Usually you would have to live
+ * on a non-moving boat to be able to live in these timezones.
+ * @constructor
+ */
+function NonOlsenTimeZone(offset, tz_name, uses_dst) {
+	this.utc_offset = offset;
+	this.tz_name = tz_name;
+	this.uses_dst = uses_dst;
+}
+
+/**
+ * Prints out information about the NonOlsenTimeZone.
+ */
+NonOlsenTimeZone.prototype.display = function() {
+	var response_text = '<b style="color: red;">This timezone is not mapped in the Olsen database</b><br/>'
+	response_text += '<b>UTC-offset</b>: ' + this.utc_offset + '<br/>';
+	response_text += '<b>Time zone name</b>: ' + this.tz_name + '<br/>';
+	response_text += '<b>Daylight Savings</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br>'
+	
+	return response_text;
+}
 
 /**
  * The keys in this dictionary are comma separated as such:
@@ -13,7 +110,7 @@
 var olsen_tz = {
 	'-12:00,0'   : new NonOlsenTimeZone('-12:00','International Datetime West', false),
 	'-11:00,0'   : new TimeZone('-11:00','Pacific/Midway', false),
-	'-11:00,1,s'   : new TimeZone('-11:00','Pacific/Apia', true),
+	'-11:00,1,s' : new TimeZone('-11:00','Pacific/Apia', true),
 	'-10:00,0'   : new TimeZone('-10:00','Pacific/Honolulu', false),
 	'-09:00,1'   : new TimeZone('-09:00','America/Anchorage', true),
 	'-08:00,1'   : new TimeZone('-08:00','America/Vancouver', true),
@@ -130,72 +227,6 @@ var olsen_ambiguity = {
 }
 
 /**
- * A simple object containing information of utc_offset, which olsen timezon key to use, 
- * and if the timezone cares about daylight savings or not.
- * 
- *  @param {String} offset - for example '-11:00'
- *  @param {String} olsen_tz - the olsen Identifier, such as "America/Denver"
- *  @param {Boolean} uses_dst - flag for whether the time zone somehow cares about daylight savings.
- */
-function TimeZone(offset, olsen_tz, uses_dst) {
-	this.utc_offset = offset;
-	this.olsen_tz = olsen_tz;
-	this.uses_dst = uses_dst;
-}
-
-/**
- * Prints out the result.
- * But before it does that, it calls this.ambiguity_check.
- */
-TimeZone.prototype.display = function() {
-	this.ambiguity_check();
-	var response_text = '<b>UTC-offset</b>: ' + this.utc_offset + '<br/>';
-	response_text += '<b>Olsen database name</b>: ' + this.olsen_tz + '<br/>';
-	response_text += '<b>Daylight Savings</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br>'
-	
-	return response_text;
-}
-
-/**
- * First checks whether there is any chance that the timezone in question
- * has similar counterparts. (I.e timezones which are in the same hemisphere, and
- * use daylight savings, but start they're daylight savings on different dates).
- * 
- * If we have a timezone which may in fact be ambigous, such as 'America/Denver',
- * we check the date specified for 'America/Denver' in the dst_comparators object.
- * If that date turns out to NOT be daylight savings time, we check the next possible
- * time zone, namely 'America/Chihuahua' and its specified daylight davings start date.
- * If the dst_comparators date for 'America/Chihuahua' resolves to DST - we switch.
- */
-TimeZone.prototype.ambiguity_check = function() {
-	if (typeof(olsen_ambiguity[this.olsen_tz]) == 'undefined') {
-		return;
-	} 
-	
-	var local_ambiguity_list = olsen_ambiguity[this.olsen_tz];
-	var length = local_ambiguity_list.length
-	
-	for (var i = 0; i < length; i++) {
-		var tz = local_ambiguity_list[i]
-		var north = (dst_comparators[tz][0]) == 'n' ? true : false;
-		
-		if (north) {
-			if (date_is_northern_dst(dst_comparators[tz][1])) {
-				this.olsen_tz = tz;
-				return;
-			} 
-		}
-		else {
-			if (date_is_south_dst(dst_comparators[tz][1])) {
-				this.olsen_tz = tz;
-				return;
-			}
-		}
-			
-	}
-}
-
-/**
  * This function checks daylight savings for the northern hemisphere.
  * 
  * It takes any given date as a parameter and checks its offset to UTC time.
@@ -256,6 +287,8 @@ function basic_timezone_info() {
 	var daylight_time_offset = (june1 - june2) / (1000 * 60 * 60);
 	var dst;
 	
+	console.log(jan1);
+	
 	var south_hemisphere = false; 
 	
 	if (std_time_offset == daylight_time_offset) {
@@ -301,29 +334,6 @@ function date_is_south_dst(date) {
 }
 
 /**
- * Same as TimeZone but is used to signify that there really is no Olsen
- * database counterpart to this timezone. Usually you would have to live
- * on a non-moving boat to be able to live in these timezones.
- */
-function NonOlsenTimeZone(offset, tz_name, uses_dst) {
-	this.utc_offset = offset;
-	this.tz_name = tz_name;
-	this.uses_dst = uses_dst;
-}
-
-/**
- *Prints out information about the NonOlsenTimeZone.
- */
-NonOlsenTimeZone.prototype.display = function() {
-	var response_text = '<b style="color: red;">This timezone is not mapped in the Olsen database</b><br/>'
-	response_text += '<b>UTC-offset</b>: ' + this.utc_offset + '<br/>';
-	response_text += '<b>Time zone name</b>: ' + this.tz_name + '<br/>';
-	response_text += '<b>Daylight Savings</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br>'
-	
-	return response_text;
-}
-
-/**
  * This function attempts to calculate timezones, it generates a key
  * corresponding to the keys in the olsen_tz object and uses that key
  * to get hold of the corresponding TimeZone object
@@ -346,12 +356,12 @@ function calculate_time_zone() {
  * Takes an offset which is given in seconds and remakes it to a string on the format '+/-HH:MM'
  */
 function convert(value) {
-	var hours = parseInt(value);
-   	value -= parseInt(value);
+	var hours = parseInt(value, 10);
+   	value -= parseInt(value, 10);
 	value *= 60;
 	
-	var mins = parseInt(value);
-   	value -= parseInt(value);
+	var mins = parseInt(value, 10);
+   	value -= parseInt(value, 10);
 	value *= 60;
 	
 	// There's only one timezone with negative minute offset, and that is Newfoundland (-03h -30min).
