@@ -8,7 +8,9 @@
  */
 
 var ONE_HOUR_IN_MINUTES = 1000 * 60;
-
+var HEMISPHERE_SOUTH = 'SOUTH';
+var HEMISPHERE_NORTH = 'NORTH';
+var HEMISPHERE_UNKNOWN = 'N/A';
 var olsen = {}
 
 /**
@@ -194,7 +196,7 @@ TimeZone.prototype.ambiguity_check = function() {
  *
  * @constructor
  * @param {string} offset - for example '-11:00'
- * @param {string} olsen_tz - the olsen Identifier, such as "America/Denver"
+ * @param {string} tz_name - a name for the time zone
  * @param {boolean} uses_dst - flag for whether the time zone somehow cares about daylight savings.
  */
 function NonOlsenTimeZone(offset, tz_name, uses_dst) {
@@ -236,7 +238,7 @@ function date_is_dst(date) {
  * Gets the offset in minutes from UTC for a certain date.
  * 
  * @param date
- * @returns {Number}
+ * @returns {number}
  */
 function get_date_offset(date) {
   var gmt_version = date.toGMTString();
@@ -266,13 +268,19 @@ function get_timezone_info() {
 	var diff = january_offset - june_offset;
 
 	if (diff < 0) {
-	    return {'utc_offset' : january_offset, 'dst':	 1, 'hemisphere' : 'north'}
+	    return {'utc_offset' : january_offset,
+	    		'dst':	1,
+	    		'hemisphere' : HEMISPHERE_NORTH}
 	}
 	else if (diff > 0) {
-        return {'utc_offset' : june_offset, 'dst' : 1, 'hemisphere' : 'south'}
+        return {'utc_offset' : june_offset,
+        		'dst' : 1,
+        		'hemisphere' : HEMISPHERE_SOUTH}
 	}
 
-    return {'utc_offset' : january_offset, 'dst': 0, 'hemisphere' : 'N/A'}
+    return {'utc_offset' : january_offset, 
+    		'dst': 0, 
+    		'hemisphere' : HEMISPHERE_UNKNOWN}
 }
 
 function get_january_offset() {
@@ -296,7 +304,7 @@ function determine_timezone() {
 	
 	var hemisphere_suffix = ''
 		
-	if (timezone_key_info.hemisphere == 'south') {
+	if (timezone_key_info.hemisphere == HEMISPHERE_SOUTH) {
 		hemisphere_suffix = ',s';
 	}
 	
