@@ -27,7 +27,7 @@
     border-top-left-radius: 5px 5px;
     border-top-right-radius: 5px 5px;
     -box-shadow: 5px 5px 3px #aaa;
-    -mox-box-shadow: 5px 5px 3px #aaa;
+    -moz-box-shadow: 5px 5px 3px #aaa;
     -webkit-box-shadow: 5px 5px 3px #aaa;
   }
   
@@ -37,9 +37,14 @@
     line-height: 1.5em;
   }
   
-  div#content p.info {
+  p.info {
+    width: 550px;
+    margin-left: auto;
+    margin-right: auto;
     font-size: 0.8em;
     font-style: italic;
+    text-align: right;
+    letter-spacing: 1px;
   }
   
   h1 {
@@ -66,9 +71,8 @@
 <h1>Automatic time zone detection using JavaScript</h3>
 <div id="content">
 <p id="tz_info"></p>
-
-<p class="info">This script is open source and hosted as <a href="https://bitbucket.org/pellepim/jstimezonedetect"/>jsTimezoneDetect @ Bitbucket</a>.</p>
 </div>
+<p class="info">This script is open source and hosted as <a href="https://bitbucket.org/pellepim/jstimezonedetect"/>jsTimezoneDetect @ Bitbucket</a>.</p>
 
 </body>
 
