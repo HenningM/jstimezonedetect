@@ -7,14 +7,68 @@
   Continued by jon at pageloom dot com as jsTimezoneDetect.
   Open source on bitbucket.org.
   -->
-  <script type="text/javascript" src='detect_timezone.min.js'></script>
+  <style type="text/css">
+  body {
+    font-family: arial, helvetica, sans-serif;
+    background-color: #eee;
+    color: #333;
+    text-shadow:1px 1px 1px #fff;
+  }
+  
+  div#content {
+    background-color: #ccf;
+    width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #fff;
+    -moz-border-radius:5px 5px 5px 5px;
+    border-bottom-left-radius: 5px 5px;
+    border-bottom-right-radius: 5px 5px;
+    border-top-left-radius: 5px 5px;
+    border-top-right-radius: 5px 5px;
+    -box-shadow: 5px 5px 3px #aaa;
+    -mox-box-shadow: 5px 5px 3px #aaa;
+    -webkit-box-shadow: 5px 5px 3px #aaa;
+  }
+  
+  div#content p {
+    padding: 10px;
+    font-size: 1.2em;
+    line-height: 1.5em;
+  }
+  
+  div#content p.info {
+    font-size: 0.8em;
+    font-style: italic;
+  }
+  
+  h1 {
+    text-align: center;
+  }
+  
+  a {
+    border-bottom:1px solid #A7A7A7;
+    color:#333;
+    line-height:20px;
+    white-space:nowrap;
+    text-decoration: none;
+  }
+  
+  a:hover {
+    border-color: #000;
+  }
+  </style>
+  <script type="text/javascript" src='/tz/detect_timezone.min.js'></script>
 </head>
 
 <body>
 
-<h3>Automatic time zone detection using JavaScript</h3>
-
+<h1>Automatic time zone detection using JavaScript</h3>
+<div id="content">
 <p id="tz_info"></p>
+
+<p class="info">This script is open source and hosted as <a href="https://bitbucket.org/pellepim/jstimezonedetect"/>jsTimezoneDetect @ Bitbucket</a>.</p>
+</div>
 
 </body>
 
