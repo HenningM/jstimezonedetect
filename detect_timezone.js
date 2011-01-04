@@ -22,7 +22,7 @@ var olsen = {}
  * The values of the dictionary are objects of either TimeZone or NonOlsenTimeZone.
  */
 olsen.timezones = {
-	'-720,0'   : new NonOlsenTimeZone('-12:00','International Datetime West', false),
+	'-720,0'   : new TimeZone('-12:00','Etc/GMT+12', false),
 	'-660,0'   : new TimeZone('-11:00','Pacific/Midway', false),
 	'-660,1,s' : new TimeZone('-11:00','Pacific/Apia', true),
 	'-600,0'   : new TimeZone('-10:00','Pacific/Honolulu', false),
@@ -43,7 +43,7 @@ olsen.timezones = {
 	'-180,0'   : new TimeZone('-03:00','America/Argentina/Buenos_Aires,', false),
 	'-180,1,s' : new TimeZone('-03:00','America/Montevideo', true),
 	'-120,0'   : new TimeZone('-02:00','America/Noronha', true),
-	'-120,1'   : new NonOlsenTimeZone('-02:00', 'Mid Atlantic', true),
+	'-120,1'   : new TimeZone('-02:00','Etc/GMT+2', true),
 	'-60,1'    : new TimeZone('-01:00','Atlantic/Azores', true),
 	'-60,0'    : new TimeZone('-01:00','Atlantic/Cape_Verde', false),
 	'0,0'      : new TimeZone('00:00','Atlantic/Reykjavik', false),
@@ -187,34 +187,6 @@ TimeZone.prototype.ambiguity_check = function() {
 			return;
 		}	
 	}
-}
-
-/**
- * Same as TimeZone but is used to signify that there really is no Olsen
- * database counterpart to this timezone. Usually you would have to live
- * on a non-moving boat to be able to live in these timezones.
- *
- * @constructor
- * @param {string} offset - for example '-11:00'
- * @param {string} tz_name - a name for the time zone
- * @param {boolean} uses_dst - flag for whether the time zone somehow cares about daylight savings.
- */
-function NonOlsenTimeZone(offset, tz_name, uses_dst) {
-	this.utc_offset = offset;
-	this.tz_name = tz_name;
-	this.uses_dst = uses_dst;
-}
-
-/**
- * Prints out information about the NonOlsenTimeZone.
- */
-NonOlsenTimeZone.prototype.display = function() {
-	var response_text = '<b style="color: red;">This timezone is not mapped in the Olsen database</b><br/>'
-	response_text += '<b>UTC-offset</b>: ' + this.utc_offset + '<br/>';
-	response_text += '<b>Time zone name</b>: ' + this.tz_name + '<br/>';
-	response_text += '<b>Daylight Savings</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br/>';
-	
-	return response_text;
 }
 
 /**
