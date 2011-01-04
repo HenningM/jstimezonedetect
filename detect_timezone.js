@@ -1,10 +1,10 @@
 /* 
  * Original script by Josh Fraser (http://www.onlineaspect.com)
- * Continued by Jon Nylander jon at pageloom dot com
+ * Continued by Jon Nylander, (jon at pageloom dot com)
  * According to both of us, you are absolutely free to do whatever 
  * you want with this code.
  * 
- * This code is currently maintained at bitbucket.org as jsTimezoneDetect.
+ * This code is  maintained at bitbucket.org as jsTimezoneDetect.
  */
 
 var ONE_HOUR_IN_MINUTES = 1000 * 60;
