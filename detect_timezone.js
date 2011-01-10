@@ -77,7 +77,7 @@ olsen.timezones = {
 	'600,0'    : new TimeZone('+10:00','Australia/Brisbane', false),
 	'600,1'	   : new TimeZone('+10:00','Asia/Vladivostok', true),
 	'600,1,s'  : new TimeZone('+10:00','Australia/Melbourne', true),
-	'660,1'    : new TimeZone('+11:00','Asia/Magadan Magadan, New Caledonia', true),
+	'660,1'    : new TimeZone('+11:00','Asia/Magadan', true),
 	'660,0'    : new TimeZone('+11:00','Pacific/Ponape', false),
 	'720,1,s'  : new TimeZone('+12:00','Pacific/Auckland', true),
 	'720,0'    : new TimeZone('+12:00','Pacific/Fiji', false),
