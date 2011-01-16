@@ -70,6 +70,7 @@ olsen.timezones = {
 	'420,0'    : new TimeZone('+07:00','Asia/Bangkok', false),
 	'480,0'    : new TimeZone('+08:00','Asia/Shanghai', false),
 	'480,1'    : new TimeZone('+08:00','Asia/Irkutsk', true),
+	'525,1,s'  : new TimeZone('+08:45','Australia/Eucla', true),
 	'540,1'    : new TimeZone('+09:00','Asia/Yakutsk', true),
 	'540,0'    : new TimeZone('+09:00','Asia/Seoul', false),
 	'570,0'    : new TimeZone('+09:30','Australia/Darwin', false),
@@ -80,7 +81,8 @@ olsen.timezones = {
 	'660,1'    : new TimeZone('+11:00','Asia/Magadan', true),
 	'660,0'    : new TimeZone('+11:00','Pacific/Ponape', false),
 	'720,1,s'  : new TimeZone('+12:00','Pacific/Auckland', true),
-	'720,0'    : new TimeZone('+12:00','Pacific/Fiji', false),
+	'720,0'    : new TimeZone('+12:00','Pacific/Wake', false),
+	'765,1,s'  : new TimeZone('+12:45','Pacific/Chatham', true),
 	'780,0'    : new TimeZone('+13:00','Pacific/Tongatapu', false)		
 }
 
@@ -104,14 +106,14 @@ olsen.dst_start_dates = {
 	'America/Cuiaba' : new Date(2011, 9, 16, 5, 0, 0, 0),
 	'America/Montevideo' : new Date(2011, 9, 2, 2, 0, 0, 0),
 	'America/Sao_Paolo' : new Date(2011, 9, 16, 5, 0, 0, 0),
-	'Europe/Minsk' : new Date(2011, 2, 27, 5, 0, 0, 0),
+	'Asia/Beirut' : new Date(2011, 2, 27, 4, 0, 0, 0),
+	'Europe/Minsk' : new Date(2011, 2, 27, 6, 0, 0, 0),
 	'Europe/Helsinki' : new Date(2011, 2, 27, 7, 0, 0, 0),
-	'Asia/Beirut' : new Date(2011, 2, 27, 13, 0, 0, 0),
-	'Asia/Amman' : new Date(2011, 3, 1, 3, 0, 0, 0),
-	'Asia/Jerusalem' : new Date(2011, 3, 1, 23, 0, 0, 0),
-	'Africa/Cairo' : new Date(2011, 3, 29, 5, 0, 0, 0),
-	'Asia/Yerevan' : new Date(2011, 2, 27, 4, 0, 0, 0),
-	'Asia/Baku'    : new Date(2011, 2, 27, 9, 0, 0, 0),
+	'Asia/Amman' : new Date(2011, 3, 1, 4, 0, 0, 0),
+	'Asia/Jerusalem' : new Date(2011, 3, 1, 6, 0, 0, 0),
+	'Africa/Cairo' : new Date(2011, 3, 29, 4, 0, 0, 0),
+	'Asia/Yerevan' : new Date(2011, 2, 27, 8, 0, 0, 0),
+	'Asia/Baku'    : new Date(2011, 2, 27, 10, 0, 0, 0),
 	'Pacific/Auckland' : new Date(2011, 8, 26, 7, 0, 0, 0),
 	'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0)
 }
@@ -128,7 +130,7 @@ olsen.ambiguity_list = {
 	'America/Chicago' : ['America/Chicago','America/Mexico_City'],
 	'America/Asuncion' : ['America/Asuncion', 'America/Santiago','America/Cuiaba'],
 	'America/Montevideo' : ['America/Montevideo', 'America/Sao_Paolo'],
-	'Asia/Beirut' : ['Europe/Minsk', 'Europe/Helsinki', 'Asia/Beirut', 'Asia/Amman', 'Asia/Jerusalem','Africa/Cairo'],
+	'Asia/Beirut' : ['Asia/Beirut', 'Europe/Minsk', 'Europe/Helsinki', 'Asia/Amman', 'Asia/Jerusalem','Africa/Cairo'],
 	'Asia/Yerevan' : ['Asia/Yerevan', 'Asia/Baku'],
 	'Pacific/Auckland' : ['Pacific/Auckland', 'Pacific/Fiji']
 }
@@ -218,7 +220,7 @@ function get_date_offset(date) {
   gmt_version = gmt_version.substring(0, gmt_version.lastIndexOf(" ")); 
   
   var date2 = new Date(gmt_version);
-  var utc_offset = (date - date2) / (ONE_HOUR_IN_MINUTES);
+  var utc_offset = -date2.getTimezoneOffset();
 
   return utc_offset;
 }
