@@ -7,21 +7,22 @@
  * This code is  maintained at bitbucket.org as jsTimezoneDetect.
  */
 
-var ONE_HOUR_IN_MINUTES = 1000 * 60;
 var HEMISPHERE_SOUTH = 'SOUTH';
 var HEMISPHERE_NORTH = 'NORTH';
 var HEMISPHERE_UNKNOWN = 'N/A';
-var olsen = {}
+var olson = {}
 
 /**
  * The keys in this dictionary are comma separated as such:
- * First the offset compared to UTC time in minutes. 
+ * 
+ * First the offset compared to UTC time in minutes.
+ *  
  * Then a flag which is 0 if the timezone does not take daylight savings into account and 1 if it does.
  * Thirdly an optional 's' signifies that the timezone is in the southern hemisphere, only interesting for timezones with DST.
  * 
- * The values of the dictionary are objects of either TimeZone or NonOlsenTimeZone.
+ * The values of the dictionary are objects of either TimeZone.
  */
-olsen.timezones = {
+olson.timezones = {
 	'-720,0'   : new TimeZone('-12:00','Etc/GMT+12', false),
 	'-660,0'   : new TimeZone('-11:00','Pacific/Midway', false),
 	'-660,1,s' : new TimeZone('-11:00','Pacific/Apia', true),
@@ -79,7 +80,7 @@ olsen.timezones = {
 	'600,1'	   : new TimeZone('+10:00','Asia/Vladivostok', true),
 	'600,1,s'  : new TimeZone('+10:00','Australia/Melbourne', true),
 	'660,1'    : new TimeZone('+11:00','Asia/Magadan', true),
-	'660,0'    : new TimeZone('+11:00','Pacific/Ponape', false),
+	'660,0'    : new TimeZone('+11:00','Pacific/Pohnpei', false),
 	'720,1,s'  : new TimeZone('+12:00','Pacific/Auckland', true),
 	'720,0'    : new TimeZone('+12:00','Pacific/Wake', false),
 	'765,1,s'  : new TimeZone('+12:45','Pacific/Chatham', true),
@@ -96,7 +97,7 @@ olsen.timezones = {
  * 
  * Each value is a date denoting when daylight savings starts for that timezone.
  */
-olsen.dst_start_dates = {
+olson.dst_start_dates = {
 	'America/Denver' : new Date(2011, 2, 13, 3, 0, 0, 0),
 	'America/Chihuahua' : new Date(2011, 3, 3, 3, 0, 0, 0),
 	'America/Chicago' : new Date(2011, 2, 13, 3, 0, 0, 0),
@@ -120,12 +121,12 @@ olsen.dst_start_dates = {
 
 /**
  * The keys in this object are timezones that we know may be ambiguous after
- * a preliminary scan through the olsen_tz object.
+ * a preliminary scan through the olson_tz object.
  * 
  * The array of timezones to compare must be in the order that daylight savings
  * starts for the regions.
  */
-olsen.ambiguity_list = {
+olson.ambiguity_list = {
 	'America/Denver' : ['America/Denver','America/Chihuahua'],
 	'America/Chicago' : ['America/Chicago','America/Mexico_City'],
 	'America/Asuncion' : ['America/Asuncion', 'America/Santiago','America/Cuiaba'],
@@ -136,17 +137,17 @@ olsen.ambiguity_list = {
 }
 
 /**
- * A simple object containing information of utc_offset, which Olsen timezone key to use, 
+ * A simple object containing information of utc_offset, which olson timezone key to use, 
  * and if the timezone cares about daylight savings or not.
  * 
  * @constructor
  * @param {string} offset - for example '-11:00'
- * @param {string} olsen_tz - the olsen Identifier, such as "America/Denver"
+ * @param {string} olson_tz - the olson Identifier, such as "America/Denver"
  * @param {boolean} uses_dst - flag for whether the time zone somehow cares about daylight savings.
  */
-function TimeZone(offset, olsen_tz, uses_dst) {
+function TimeZone(offset, olson_tz, uses_dst) {
 	this.utc_offset = offset;
-	this.olsen_tz = olsen_tz;
+	this.olson_tz = olson_tz;
 	this.uses_dst = uses_dst;
 }
 
@@ -157,7 +158,7 @@ function TimeZone(offset, olsen_tz, uses_dst) {
 TimeZone.prototype.display = function() {
 	this.ambiguity_check();
 	var response_text = '<b>UTC-offset</b>: ' + this.utc_offset + '<br/>';
-	response_text += '<b>Olsen database name</b>: ' + this.olsen_tz + '<br/>';
+	response_text += '<b>Olson database name</b>: ' + this.olson_tz + '<br/>';
 	response_text += '<b>Daylight Savings</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br>'
 	
 	return response_text;
@@ -173,7 +174,7 @@ TimeZone.prototype.display = function() {
  * timezones.
  */
 TimeZone.prototype.ambiguity_check = function() {
-	var local_ambiguity_list = olsen.ambiguity_list[this.olsen_tz];
+	var local_ambiguity_list = olson.ambiguity_list[this.olson_tz];
 	
 	if (typeof(local_ambiguity_list) == 'undefined') {
 		return;
@@ -184,8 +185,8 @@ TimeZone.prototype.ambiguity_check = function() {
 	for (var i = 0; i < length; i++) {
 		var tz = local_ambiguity_list[i]
 		
-		if (date_is_dst(olsen.dst_start_dates[tz])) {
-			this.olsen_tz = tz;
+		if (date_is_dst(olson.dst_start_dates[tz])) {
+			this.olson_tz = tz;
 			return;
 		}	
 	}
@@ -215,14 +216,13 @@ function date_is_dst(date) {
  * @returns {number}
  */
 function get_date_offset(date) {
-  var gmt_version = date.toGMTString();
+	var gmt_version = date.toGMTString();
 
-  gmt_version = gmt_version.substring(0, gmt_version.lastIndexOf(" ")); 
-  
-  var date2 = new Date(gmt_version);
-  var utc_offset = -date2.getTimezoneOffset();
+	gmt_version = gmt_version.substring(0, gmt_version.lastIndexOf(" ")); 
 
-  return utc_offset;
+	var date2 = new Date(gmt_version);
+
+	return -date2.getTimezoneOffset();
 }
 
 /**
@@ -266,7 +266,7 @@ function get_june_offset() {
 }
 
 /**
- * Uses get_timezone_info() to formulate a key to use in the olsen.timezones dictionary.
+ * Uses get_timezone_info() to formulate a key to use in the olson.timezones dictionary.
  * 
  * Returns a primitive object on the format:
  * {'timezone': TimeZone, 'key' : 'the key used to find the TimeZone object'}
@@ -284,7 +284,7 @@ function determine_timezone() {
 	
 	var tz_key = timezone_key_info.utc_offset + ',' + timezone_key_info.dst + hemisphere_suffix
 	
-	return {'timezone' : olsen.timezones[tz_key], 'key' : tz_key}
+	return {'timezone' : olson.timezones[tz_key], 'key' : tz_key}
 }
 
 /**
