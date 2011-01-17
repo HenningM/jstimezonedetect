@@ -18,9 +18,10 @@ var olson = {}
  * First the offset compared to UTC time in minutes.
  *  
  * Then a flag which is 0 if the timezone does not take daylight savings into account and 1 if it does.
+ * 
  * Thirdly an optional 's' signifies that the timezone is in the southern hemisphere, only interesting for timezones with DST.
  * 
- * The values of the dictionary are objects of either TimeZone.
+ * The values of the dictionary are TimeZone objects.
  */
 olson.timezones = {
 	'-720,0'   : new TimeZone('-12:00','Etc/GMT+12', false),
@@ -34,7 +35,7 @@ olson.timezones = {
 	'-360,0'   : new TimeZone('-06:00','America/Regina', false),
 	'-360,1'   : new TimeZone('-06:00','America/Chicago', true),
 	'-300,0'   : new TimeZone('-05:00','America/Atikokan', false),
-	'-300,1'   : new TimeZone('-05:00','America/Montreal', true),
+	'-300,1'   : new TimeZone('-05:00','America/New_York', true),
 	'-270,0'   : new TimeZone('-04:30','America/Caracas', false),
 	'-240,1'   : new TimeZone('-04:00','America/Halifax', true),
 	'-240,0'   : new TimeZone('-04:00','America/Manaus', false),
@@ -43,15 +44,15 @@ olson.timezones = {
 	'-180,1'   : new TimeZone('-03:00','America/Godthab', true),
 	'-180,0'   : new TimeZone('-03:00','America/Argentina/Buenos_Aires,', false),
 	'-180,1,s' : new TimeZone('-03:00','America/Montevideo', true),
-	'-120,0'   : new TimeZone('-02:00','America/Noronha', true),
+	'-120,0'   : new TimeZone('-02:00','America/Noronha', false),
 	'-120,1'   : new TimeZone('-02:00','Etc/GMT+2', true),
 	'-60,1'    : new TimeZone('-01:00','Atlantic/Azores', true),
 	'-60,0'    : new TimeZone('-01:00','Atlantic/Cape_Verde', false),
 	'0,0'      : new TimeZone('00:00','Atlantic/Reykjavik', false),
-	'0,1'      : new TimeZone('00:00','Europe/Dublin', true),
-	'60,1'     : new TimeZone('+01:00','Europe/Amsterdam', true),
+	'0,1'      : new TimeZone('00:00','Europe/London', true),
+	'60,1'     : new TimeZone('+01:00','Europe/Berlin', true),
 	'60,0'     : new TimeZone('+01:00','Africa/Porto-Novo', false),
-	'60,1,s'   : new TimeZone('-01:00','Africa/Windhoek',true),
+	'60,1,s'   : new TimeZone('+01:00','Africa/Windhoek',true),
 	'120,1'    : new TimeZone('+02:00','Asia/Beirut', true),
 	'120,0'    : new TimeZone('+02:00','Africa/Harare', false),
 	'180,1'    : new TimeZone('+03:00','Europe/Moscow', true),
@@ -109,7 +110,7 @@ olson.dst_start_dates = {
 	'America/Sao_Paolo' : new Date(2011, 9, 16, 5, 0, 0, 0),
 	'Asia/Beirut' : new Date(2011, 2, 27, 4, 0, 0, 0),
 	'Europe/Minsk' : new Date(2011, 2, 27, 6, 0, 0, 0),
-	'Europe/Helsinki' : new Date(2011, 2, 27, 7, 0, 0, 0),
+	'Europe/Istanbul' : new Date(2011, 2, 27, 7, 0, 0, 0),
 	'Asia/Amman' : new Date(2011, 3, 1, 4, 0, 0, 0),
 	'Asia/Jerusalem' : new Date(2011, 3, 1, 6, 0, 0, 0),
 	'Africa/Cairo' : new Date(2011, 3, 29, 4, 0, 0, 0),
@@ -131,7 +132,7 @@ olson.ambiguity_list = {
 	'America/Chicago' : ['America/Chicago','America/Mexico_City'],
 	'America/Asuncion' : ['America/Asuncion', 'America/Santiago','America/Cuiaba'],
 	'America/Montevideo' : ['America/Montevideo', 'America/Sao_Paolo'],
-	'Asia/Beirut' : ['Asia/Beirut', 'Europe/Minsk', 'Europe/Helsinki', 'Asia/Amman', 'Asia/Jerusalem','Africa/Cairo'],
+	'Asia/Beirut' : ['Asia/Beirut', 'Europe/Minsk', 'Europe/Istanbul', 'Asia/Amman', 'Asia/Jerusalem','Africa/Cairo'],
 	'Asia/Yerevan' : ['Asia/Yerevan', 'Asia/Baku'],
 	'Pacific/Auckland' : ['Pacific/Auckland', 'Pacific/Fiji']
 }
