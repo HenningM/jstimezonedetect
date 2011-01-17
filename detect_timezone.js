@@ -77,6 +77,7 @@ olson.timezones = {
 	'420,0'    : new TimeZone('+07:00','Asia/Jakarta', false),
 	'480,0'    : new TimeZone('+08:00','Asia/Shanghai', false),
 	'480,1'    : new TimeZone('+08:00','Asia/Irkutsk', true),
+	'525,0'    : new TimeZone('+08:45','Australia/Eucla', true),
 	'525,1,s'  : new TimeZone('+08:45','Australia/Eucla', true),
 	'540,1'    : new TimeZone('+09:00','Asia/Yakutsk', true),
 	'540,0'    : new TimeZone('+09:00','Asia/Tokyo', false),
@@ -131,7 +132,11 @@ olson.dst_start_dates = {
 	'Asia/Yerevan' : new Date(2011, 2, 27, 8, 0, 0, 0),
 	'Asia/Baku'    : new Date(2011, 2, 27, 10, 0, 0, 0),
 	'Pacific/Auckland' : new Date(2011, 8, 26, 7, 0, 0, 0),
-	'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0)
+	'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0),
+	'America/Halifax' : new Date(2011, 2, 13, 6, 0, 0, 0),
+	'America/Goose_Bay' : new Date(2011, 2, 13, 4, 1, 0, 0),
+	'America/Miquelon' : new Date(2011, 2, 13, 5, 0, 0, 0),
+	'America/Godthab' : new Date(2011, 2, 27, 1, 0, 0, 0)
 }
 
 /**
@@ -150,7 +155,9 @@ olson.ambiguity_list = {
 	'Asia/Yerevan' : ['Asia/Yerevan', 'Asia/Baku'],
 	'Pacific/Auckland' : ['Pacific/Auckland', 'Pacific/Fiji'],
 	'America/Los_Angeles' : ['America/Los_Angeles', 'America/Santa_Isabel'],
-	'America/New_York' : ['America/Havana','America/New_York']
+	'America/New_York' : ['America/Havana','America/New_York'],
+	'America/Halifax' : ['America/Goose_Bay','America/Halifax'],
+	'America/Godthab' : ['America/Miquelon', 'America/Godthab']
 }
 
 /**
@@ -234,11 +241,9 @@ function date_is_dst(date) {
  */
 function get_date_offset(date) {
 	var gmt_version = date.toGMTString();
-
 	gmt_version = gmt_version.substring(0, gmt_version.lastIndexOf(" ")); 
-
+	
 	var date2 = new Date(gmt_version);
-
 	return -date2.getTimezoneOffset();
 }
 
