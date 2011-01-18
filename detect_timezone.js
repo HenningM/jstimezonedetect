@@ -116,7 +116,7 @@ olson.dst_start_dates = {
 	'America/Asuncion' : new Date(2011, 9, 2, 3, 0, 0, 0),
 	'America/Santiago' : new Date(2011, 9, 9, 3, 0, 0, 0),
 	'America/Campo_Grande' : new Date(2011, 9, 16, 5, 0, 0, 0),
-	'America/Montevideo' : new Date(2011, 9, 2, 2, 0, 0, 0),
+	'America/Montevideo' : new Date(2011, 9, 2, 3, 0, 0, 0),
 	'America/Sao_Paolo' : new Date(2011, 9, 16, 5, 0, 0, 0),
 	'America/Los_Angeles' : new Date(2011, 2, 13, 8, 0, 0, 0),
 	'America/Santa_Isabel' : new Date(2011, 3, 5, 8, 0, 0, 0),
@@ -126,15 +126,15 @@ olson.dst_start_dates = {
 	'Asia/Beirut' : new Date(2011, 2, 27, 1, 0, 0, 0),
 	'Europe/Minsk' : new Date(2011, 2, 27, 3, 0, 0, 0),
 	'Europe/Istanbul' : new Date(2011, 2, 27, 7, 0, 0, 0),
-	'Asia/Damascus' : new Date(2011, 3, 1, 4, 0, 0, 0),
+	'Asia/Damascus' : new Date(2011, 3, 1, 2, 0, 0, 0),
 	'Asia/Jerusalem' : new Date(2011, 3, 1, 6, 0, 0, 0),
 	'Africa/Cairo' : new Date(2011, 3, 29, 4, 0, 0, 0),
-	'Asia/Yerevan' : new Date(2011, 2, 27, 8, 0, 0, 0),
-	'Asia/Baku'    : new Date(2011, 2, 27, 10, 0, 0, 0),
+	'Asia/Yerevan' : new Date(2011, 2, 27, 4, 0, 0, 0),
+	'Asia/Baku'    : new Date(2011, 2, 27, 8, 0, 0, 0),
 	'Pacific/Auckland' : new Date(2011, 8, 26, 7, 0, 0, 0),
 	'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0),
 	'America/Halifax' : new Date(2011, 2, 13, 6, 0, 0, 0),
-	'America/Goose_Bay' : new Date(2011, 2, 13, 4, 1, 0, 0),
+	'America/Goose_Bay' : new Date(2011, 2, 13, 2, 1, 0, 0),
 	'America/Miquelon' : new Date(2011, 2, 13, 5, 0, 0, 0),
 	'America/Godthab' : new Date(2011, 2, 27, 1, 0, 0, 0)
 }
@@ -241,7 +241,7 @@ function date_is_dst(date) {
  */
 function get_date_offset(date) {
 	return -date.getTimezoneOffset();
-	}
+}
 
 /**
  * This function does some basic calculations to create information about 
