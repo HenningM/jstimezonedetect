@@ -120,7 +120,7 @@ olson.dst_start_dates = {
 	'America/Sao_Paolo' : new Date(2011, 9, 16, 5, 0, 0, 0),
 	'America/Los_Angeles' : new Date(2011, 2, 13, 8, 0, 0, 0),
 	'America/Santa_Isabel' : new Date(2011, 3, 5, 8, 0, 0, 0),
-	'America/Havana' : new Date(2011, 2, 12, 20, 0, 0, 0),
+	'America/Havana' : new Date(2011, 2, 13, 2, 0, 0, 0),
 	'America/New_York' : new Date(2011, 2, 13, 7, 0, 0, 0),
 	'Asia/Gaza' : new Date(2011, 2, 26, 23, 0, 0, 0),
 	'Asia/Beirut' : new Date(2011, 2, 27, 4, 0, 0, 0),
@@ -240,12 +240,8 @@ function date_is_dst(date) {
  * @returns {number}
  */
 function get_date_offset(date) {
-	var gmt_version = date.toGMTString();
-	gmt_version = gmt_version.substring(0, gmt_version.lastIndexOf(" ")); 
-	
-	var date2 = new Date(gmt_version);
-	return -date2.getTimezoneOffset();
-}
+	return -date.getTimezoneOffset();
+	}
 
 /**
  * This function does some basic calculations to create information about 
