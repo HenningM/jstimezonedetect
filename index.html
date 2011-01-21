@@ -12,28 +12,27 @@
   <style type="text/css">
   body {
     font-family: helvetica, sans-serif;
-    background-color: #ddd;
-    color: #333;
-    text-shadow:1px 1px 1px #fff;
+    background-color: #555;
+    color: #fff;
+    text-shadow:1px 1px 0px #000;
+    padding: 0px;
+    margin: 0px;
   }
   
   div#content {
-    background-color: #ccf;
-    width: 550px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid #fff;
-    -moz-border-radius:5px 5px 5px 5px;
-    border-bottom-left-radius: 5px 5px;
-    border-bottom-right-radius: 5px 5px;
-    border-top-left-radius: 5px 5px;
-    border-top-right-radius: 5px 5px;
-    -box-shadow: 5px 5px 3px #aaa;
-    -moz-box-shadow: 5px 5px 3px #aaa;
-    -webkit-box-shadow: 5px 5px 3px #aaa;
+    background-color: #333;
+    width: 100%;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    -box-shadow: 5px 5px 3px #333;
+    -moz-box-shadow: 5px 5px 3px #333;
+    -webkit-box-shadow: 5px 5px 3px #333;
   }
   
   div#content p {
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto;
     padding: 3px 10px 3px 10px;
     text-align: left;
     font-size: 20px;
@@ -41,12 +40,15 @@
     font-weight: normal;
   }
   
+  div#content p#tz_info {
+    display: none;
+  }
+  
   p.info {
     width: 730px;
     margin-left: auto;
     margin-right: auto;
-    font-size: 11px;
-    font-style: italic;
+    font-size: 12px;
     font-weight: normal;
     text-align: right;
     letter-spacing: 1px;
@@ -90,7 +92,7 @@
   
   a {
     border-bottom:1px solid #A7A7A7;
-    color:#333;
+    color:#bdf;
     line-height:20px;
     white-space:nowrap;
     text-decoration: none;
@@ -101,6 +103,7 @@
   }
   </style>
   <script type="text/javascript" src='detect_timezone.js'></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
 </head>
 
 <body>
@@ -116,11 +119,11 @@
 <p class="instructions">The Olson database, also known as the <strong>tz database</strong>. Is a public domain collaborative compilation of information about the world's timezones.</p>
 <p class="instructions">It is widely used as basis for timezone information in operating systems and software. Most platforms and programming languages have libraries that support it.</p>
 <p class="instructions"><a href="http://en.wikipedia.org/wiki/Tz_database">More at Wikipedia!</a></p>
-<h3 class="omg">I don't like the timezone this script gives me!</h3>
+<h3>I don't like the timezone this script gives me!</h3>
 <p class="instructions">This script does not do geolocation. It simply picks the most populated timezone among several roughly identical ones.</p>
 <p class="instructions">For example, it is impossible to distinguish between different cities in Europe. This script will return Europe/Berlin regardless of where you live in the Central European timezone.</p>
 <p class="instructions"><a href="https://bitbucket.org/pellepim/jstimezonedetect/wiki/Detection_List">Click here for the list of timezones this script is able to detect</a>.</p>
-<h3 class="omg">NO CAN HAZ TIMEZONEZ?!?11</h3>
+<h3>NO CAN HAZ TIMEZONEZ?!?11</h3>
 <p class="instructions">If this script fails to correctly determine your timezone, <a href="https://bitbucket.org/pellepim/jstimezonedetect/issues/new">Please report it!</a></p>
 <p class="instructions">When you report an issue. Please tell us </p>
 <ul>
@@ -128,6 +131,5 @@
     <li>what operating system you use, and</li>
     <li>what browser you use.</li>
 </ul>
-
 </body>
 </html>
