@@ -47,13 +47,13 @@ olson.timezones = {
 	'-240,1,s' : new TimeZone('-04:00','America/Asuncion', true),
 	'-210,1'   : new TimeZone('-03:30','America/St_Johns', true),
 	'-180,1'   : new TimeZone('-03:00','America/Godthab', true),
-	'-180,0'   : new TimeZone('-03:00','America/Argentina/Buenos_Aires,', false),
+	'-180,0'   : new TimeZone('-03:00','America/Argentina/Buenos_Aires', false),
 	'-180,1,s' : new TimeZone('-03:00','America/Montevideo', true),
 	'-120,0'   : new TimeZone('-02:00','America/Noronha', false),
 	'-120,1'   : new TimeZone('-02:00','Etc/GMT+2', true),
 	'-60,1'    : new TimeZone('-01:00','Atlantic/Azores', true),
 	'-60,0'    : new TimeZone('-01:00','Atlantic/Cape_Verde', false),
-	'0,0'      : new TimeZone('00:00','Africa/Casablanca', false),
+	'0,0'      : new TimeZone('00:00','Etc/UTC', false),
 	'0,1'      : new TimeZone('00:00','Europe/London', true),
 	'60,1'     : new TimeZone('+01:00','Europe/Berlin', true),
 	'60,0'     : new TimeZone('+01:00','Africa/Lagos', false),
@@ -183,8 +183,8 @@ function TimeZone(offset, olson_tz, uses_dst) {
 TimeZone.prototype.display = function() {
 	this.ambiguity_check();
 	var response_text = '<b>UTC-offset</b>: ' + this.utc_offset + '<br/>';
-	response_text += '<b>Olson database name</b>: ' + this.olson_tz + '<br/>';
-	response_text += '<b>Daylight Savings</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br/>';
+	response_text += '<b>Zoneinfo key</b>: ' + this.olson_tz + '<br/>';
+	response_text += '<b>Zone uses DST</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br/>';
 	
 	return response_text;
 }
