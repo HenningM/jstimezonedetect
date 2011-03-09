@@ -256,6 +256,7 @@ function get_date_offset(date) {
  */
 function get_timezone_info() {
 	var january_offset = get_january_offset();
+	
 	var june_offset = get_june_offset();
 	
 	var diff = january_offset - june_offset;
