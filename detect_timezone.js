@@ -150,7 +150,7 @@ olson.ambiguity_list = {
 	'America/Denver' : ['America/Denver','America/Mazatlan'],
 	'America/Chicago' : ['America/Chicago','America/Mexico_City'],
 	'America/Asuncion' : ['Atlantic/Stanley', 'America/Asuncion', 'America/Santiago','America/Campo_Grande'],
-	'America/Montevideo' : ['America/Montevideo', 'America/Sao_Paolo'],
+	'America/Montevideo' : ['America/Montevideo', 'America/Sao_Paulo'],
 	'Asia/Beirut' : ['Asia/Gaza','Asia/Beirut', 'Europe/Minsk', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem','Africa/Cairo'],
 	'Asia/Yerevan' : ['Asia/Yerevan', 'Asia/Baku'],
 	'Pacific/Auckland' : ['Pacific/Auckland', 'Pacific/Fiji'],
