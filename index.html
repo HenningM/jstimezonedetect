@@ -104,6 +104,24 @@
   </style>
   <script type="text/javascript" src='detect_timezone.js'></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+  <script type="text/javascript">
+  $("body").ready(function () {
+        var tz_info = jzTimezoneDetector.determine_timezone();
+        
+        response_text = 'No timezone found for ' + tz_info.key;
+        
+        if (typeof(tz_info.timezone) == 'undefined') {
+            response_text = 'No timezone found for ' + tz_info.key;
+        }
+        else {
+            response_text = tz_info.timezone.display(); 
+        }
+        
+        document.getElementById('tz_info').innerHTML = response_text
+        
+        $('#tz_info').fadeIn(3000);
+    });
+  </script>
 </head>
 
 <body>
