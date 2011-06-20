@@ -1,16 +1,13 @@
 /* 
  * Original script by Josh Fraser (http://www.onlineaspect.com)
- * Continued by Jon Nylander, (jon at pageloom dot com)
- * According to both of us, you are absolutely free to do whatever 
- * you want with this code.
- * 
- * This code is  maintained at bitbucket.org as jsTimezoneDetect.
+ * Continued and maintained by Jon Nylander at https://bitbucket.org/pellepim/jstimezonedetect
+ *
+ * Provided under the Do Whatever You Want With This Code License.
  */
 /**
  * Namespace to hold all the code for timezone detection.
  */
 var jstz = {};
-
 jstz.HEMISPHERE_SOUTH = 'SOUTH';
 jstz.HEMISPHERE_NORTH = 'NORTH';
 jstz.HEMISPHERE_UNKNOWN = 'N/A';
