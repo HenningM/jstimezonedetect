@@ -4,14 +4,99 @@
  *
  * Provided under the Do Whatever You Want With This Code License.
  */
+
 /**
  * Namespace to hold all the code for timezone detection.
  */
-var jstz = {};
-jstz.HEMISPHERE_SOUTH = 'SOUTH';
-jstz.HEMISPHERE_NORTH = 'NORTH';
-jstz.HEMISPHERE_UNKNOWN = 'N/A';
-jstz.olson = {};
+var jstz = (function () {
+    'use strict';
+    var HEMISPHERE_SOUTH = 'SOUTH',
+        HEMISPHERE_NORTH = 'NORTH',
+        HEMISPHERE_UNKNOWN = 'N/A',
+        
+        /** 
+         * Gets the offset in minutes from UTC for a certain date.
+         * @param {Date} date
+         * @returns {Number}
+         */
+        get_date_offset = function (date) {
+            return -date.getTimezoneOffset();
+        },
+        
+        get_january_offset = function () {
+            return get_date_offset(new Date(2010, 0, 1, 0, 0, 0, 0));
+        },
+    
+        get_june_offset = function () {
+            return get_date_offset(new Date(2010, 5, 1, 0, 0, 0, 0));
+        },
+        
+        /**
+         * Private method.
+         * Checks whether a given date is in daylight savings time.
+         * If the date supplied is after june, we assume that we're checking
+         * for southern hemisphere DST.
+         * @param {Date} date
+         * @returns {Boolean}
+         */
+        date_is_dst = function (date) {
+            var base_offset = ((date.getMonth() > 5 ? get_june_offset() 
+                                                : get_january_offset())),
+                date_offset = get_date_offset(date); 
+            
+            return (base_offset - date_offset) !== 0;
+        },
+    
+        /**
+         * This function does some basic calculations to create information about 
+         * the user's timezone.
+         * 
+         * Returns a primitive object on the format
+         * {'utc_offset' : -9, 'dst': 1, hemisphere' : 'north'}
+         * where dst is 1 if the region uses daylight savings.
+         * 
+         * @returns {Object}  
+         */
+        get_timezone_info = function () {
+            var january_offset = get_january_offset(), 
+                june_offset = get_june_offset(), 
+                diff = get_january_offset() - get_june_offset(),
+                TzInfo = function (o, d, h) {
+                    this.utc_offset = o;
+                    this.dst = d;
+                    this.hemisphere = h;
+                };
+        
+            if (diff < 0) {
+                return new TzInfo(january_offset, 1, HEMISPHERE_NORTH);
+            } else if (diff > 0) {
+                return new TzInfo(june_offset, 1, HEMISPHERE_SOUTH);
+            }
+    
+            return new TzInfo(january_offset, 0, HEMISPHERE_UNKNOWN);
+        },
+    
+        /**
+         * Uses get_timezone_info() to formulate a key to use in the olson.timezones dictionary.
+         * 
+         * Returns a primitive object on the format:
+         * {'timezone': TimeZone, 'key' : 'the key used to find the TimeZone object'}
+         * 
+         * @returns Object 
+         */
+        determine_timezone = function () {
+            var timezone_key_info = get_timezone_info(),
+                hemisphere_suffix = timezone_key_info.hemisphere === HEMISPHERE_SOUTH ? ',s' : '',
+                tz_key = timezone_key_info.utc_offset + ',' + timezone_key_info.dst + hemisphere_suffix; 
+
+            return {'timezone' : jstz.olson.timezones[tz_key], 'key' : tz_key};
+        };
+    
+    return {
+        determine_timezone : determine_timezone,
+        date_is_dst : date_is_dst
+    };
+}());
 
 /**
  * A simple object containing information of utc_offset, which olson timezone key to use, 
@@ -22,152 +107,75 @@ jstz.olson = {};
  * @param {string} olson_tz - the olson Identifier, such as "America/Denver"
  * @param {boolean} uses_dst - flag for whether the time zone somehow cares about daylight savings.
  */
-jstz.TimeZone = function (offset, olson_tz, uses_dst) {
-	this.utc_offset = offset;
-	this.olson_tz = olson_tz;
-	this.uses_dst = uses_dst;
-};
-
-/**
- * Prints out the result.
- * But before it does that, it calls this.ambiguity_check.
- */
-jstz.TimeZone.prototype.display = function () {
-	this.ambiguity_check();
-	var response_text = '<b>UTC-offset</b>: ' + this.utc_offset + '<br/>';
-	response_text += '<b>Zoneinfo key</b>: ' + this.olson_tz + '<br/>';
-	response_text += '<b>Zone uses DST</b>: ' + (this.uses_dst ? 'yes' : 'no') + '<br/>';
-	
-	return response_text;
-};
-
-/**
- * Checks if a timezone has possible ambiguities. I.e timezones that are similar.
- * 
- * If the preliminary scan determines that we're in America/Denver. We double check
- * here that we're really there and not in America/Mazatlan.
- * 
- * This is done by checking known dates for when daylight savings start for different
- * timezones.
- */
-jstz.TimeZone.prototype.ambiguity_check = function () {
-	var ambiguity_list, length, i, tz;
-	ambiguity_list = jstz.olson.ambiguity_list[this.olson_tz];
-	
-	if (typeof (ambiguity_list) === 'undefined') {
-		return;
-	}
-	
-	length = ambiguity_list.length;
-	i = 0;
-	
-	for (; i < length; i += 1) {
-		tz = ambiguity_list[i];
-
-		if (jstz.date_is_dst(jstz.olson.dst_start_dates[tz])) {
-			this.olson_tz = tz;
-			return;
-		}	
-	}
-};
-
-/**
- * Checks whether a given date is in daylight savings time.
- * 
- * If the date supplied is after june, we assume that we're checking
- * for southern hemisphere DST.
- * 
- * @param {Date} date
- * @returns {boolean}
- */
-jstz.date_is_dst = function (date) {
-	var date_offset, base_offset; 
-	base_offset = ((date.getMonth() > 5 ? jstz.get_june_offset() 
-										: jstz.get_january_offset()));
-	
-	date_offset = jstz.get_date_offset(date);
-	
-	return (base_offset - date_offset) !== 0;
-};
-
-/** 
- * Gets the offset in minutes from UTC for a certain date.
- * 
- * @param date
- * @returns {number}
- */
-jstz.get_date_offset = function (date) {
-	return -date.getTimezoneOffset();
-};
-
-/**
- * This function does some basic calculations to create information about 
- * the user's timezone.
- * 
- * Returns a primitive object on the format
- * {'utc_offset' : -9, 'dst': 1, hemisphere' : 'north'}
- * where dst is 1 if the region uses daylight savings.
- * 
- * @returns {Object}  
- */
-jstz.get_timezone_info = function () {
-	var january_offset, june_offset, diff;
-	january_offset = jstz.get_january_offset();
-	june_offset = jstz.get_june_offset();
-	diff = january_offset - june_offset;
-
-	if (diff < 0) {
-	    return {
-            'utc_offset' : january_offset,
-            'dst': 1,
-            'hemisphere' : jstz.HEMISPHERE_NORTH
-	    };
-	} else if (diff > 0) {
-        return {
-            'utc_offset' : june_offset,
-            'dst' : 1,
-            'hemisphere' : jstz.HEMISPHERE_SOUTH
+jstz.TimeZone = (function () {
+    'use strict';    
+        /**
+        * Prints out the result.
+        * But before it does that, it calls this.ambiguity_check.
+        */
+    var display = function () {
+            if (this.is_ambiguous()) {
+                this.ambiguity_check();
+            }
+            
+            return '<b>Zoneinfo key</b>: ' + this.olson_tz;
+        },
+        /**
+         * Checks if a timezone has possible ambiguities. I.e timezones that are similar.
+         * 
+         * If the preliminary scan determines that we're in America/Denver. We double check
+         * here that we're really there and not in America/Mazatlan.
+         * 
+         * This is done by checking known dates for when daylight savings start for different
+         * timezones.
+         */
+        ambiguity_check = function () {
+            var ambiguity_list = jstz.olson.ambiguity_list[this.olson_tz],
+                length = ambiguity_list.length, 
+                i = 0,
+                tz = ambiguity_list[0];
+            
+            for (; i < length; i += 1) {
+                tz = ambiguity_list[i];
+        
+                if (jstz.date_is_dst(jstz.olson.dst_start_dates[tz])) {
+                    this.olson_tz = tz;
+                    return;
+                }   
+            }
+        },
+        
+        /**
+         * Checks if it is possible that the timezone is ambiguous.
+         */
+        is_ambiguous = function () {
+            return typeof (jstz.olson.ambiguity_list[this.olson_tz]) !== 'undefined';
+        },
+        
+        /**
+        * Constructor for jstz.TimeZone
+        */
+        Constr = function (offset, olson_tz, uses_dst) {
+            this.utc_offset = offset;
+            this.olson_tz = olson_tz;
+            this.uses_dst = uses_dst;   
         };
-	}
-
-    return {
-        'utc_offset' : january_offset, 
-        'dst': 0, 
-        'hemisphere' : jstz.HEMISPHERE_UNKNOWN
+    
+    /**
+     * Public API for jstz.TimeZone
+     */
+    Constr.prototype = {
+        constructor : jstz.TimeZone,
+        display : display,
+        ambiguity_check : ambiguity_check,
+        is_ambiguous : is_ambiguous
     };
-};
+    
+    return Constr;
+}());
 
-jstz.get_january_offset = function () {
-	return jstz.get_date_offset(new Date(2011, 0, 1, 0, 0, 0, 0));
-};
-
-jstz.get_june_offset = function () {
-	return jstz.get_date_offset(new Date(2011, 5, 1, 0, 0, 0, 0));
-};
-
-/**
- * Uses get_timezone_info() to formulate a key to use in the olson.timezones dictionary.
- * 
- * Returns a primitive object on the format:
- * {'timezone': TimeZone, 'key' : 'the key used to find the TimeZone object'}
- * 
- * @returns Object 
- */
-jstz.determine_timezone = function () {
-	var timezone_key_info, hemisphere_suffix, tz_key;
-	timezone_key_info = jstz.get_timezone_info();
-	hemisphere_suffix = '';
-		
-	if (timezone_key_info.hemisphere === jstz.HEMISPHERE_SOUTH) {
-		hemisphere_suffix = ',s';
-	}
-	
-	tz_key = timezone_key_info.utc_offset + ',' + timezone_key_info.dst + hemisphere_suffix;
-	
-	return {'timezone' : jstz.olson.timezones[tz_key], 'key' : tz_key};
-};
-
-/**
+jstz.olson = {};
+/*
  * The keys in this dictionary are comma separated as such:
  * 
  * First the offset compared to UTC time in minutes.
@@ -262,37 +270,41 @@ jstz.olson.timezones = {
  * 
  * Each value is a date denoting when daylight savings starts for that timezone.
  */
-jstz.olson.dst_start_dates = {
-    'America/Denver' : new Date(2011, 2, 13, 3, 0, 0, 0),
-    'America/Mazatlan' : new Date(2011, 3, 3, 3, 0, 0, 0),
-    'America/Chicago' : new Date(2011, 2, 13, 3, 0, 0, 0),
-    'America/Mexico_City' : new Date(2011, 3, 3, 3, 0, 0, 0),
-    'Atlantic/Stanley' : new Date(2011, 8, 4, 7, 0, 0, 0),
-    'America/Asuncion' : new Date(2011, 9, 2, 3, 0, 0, 0),
-    'America/Santiago' : new Date(2011, 9, 9, 3, 0, 0, 0),
-    'America/Campo_Grande' : new Date(2011, 9, 16, 5, 0, 0, 0),
-    'America/Montevideo' : new Date(2011, 9, 2, 3, 0, 0, 0),
-    'America/Sao_Paulo' : new Date(2011, 9, 16, 5, 0, 0, 0),
-    'America/Los_Angeles' : new Date(2011, 2, 13, 8, 0, 0, 0),
-    'America/Santa_Isabel' : new Date(2011, 3, 5, 8, 0, 0, 0),
-    'America/Havana' : new Date(2011, 2, 13, 2, 0, 0, 0),
-    'America/New_York' : new Date(2011, 2, 13, 7, 0, 0, 0),
-    'Asia/Gaza' : new Date(2011, 2, 26, 23, 0, 0, 0),
-    'Asia/Beirut' : new Date(2011, 2, 27, 1, 0, 0, 0),
-    'Europe/Minsk' : new Date(2011, 2, 27, 3, 0, 0, 0),
-    'Europe/Istanbul' : new Date(2011, 2, 27, 7, 0, 0, 0),
-    'Asia/Damascus' : new Date(2011, 3, 1, 2, 0, 0, 0),
-    'Asia/Jerusalem' : new Date(2011, 3, 1, 6, 0, 0, 0),
-    'Africa/Cairo' : new Date(2011, 3, 29, 4, 0, 0, 0),
-    'Asia/Yerevan' : new Date(2011, 2, 27, 4, 0, 0, 0),
-    'Asia/Baku'    : new Date(2011, 2, 27, 8, 0, 0, 0),
-    'Pacific/Auckland' : new Date(2011, 8, 26, 7, 0, 0, 0),
-    'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0),
-    'America/Halifax' : new Date(2011, 2, 13, 6, 0, 0, 0),
-    'America/Goose_Bay' : new Date(2011, 2, 13, 2, 1, 0, 0),
-    'America/Miquelon' : new Date(2011, 2, 13, 5, 0, 0, 0),
-    'America/Godthab' : new Date(2011, 2, 27, 1, 0, 0, 0)
-};
+jstz.olson.dst_start_dates = (function () {
+    "use strict"
+    return {
+        'America/Denver' : new Date(2011, 2, 13, 3, 0, 0, 0),
+        'America/Mazatlan' : new Date(2011, 3, 3, 3, 0, 0, 0),
+        'America/Chicago' : new Date(2011, 2, 13, 3, 0, 0, 0),
+        'America/Mexico_City' : new Date(2011, 3, 3, 3, 0, 0, 0),
+        'Atlantic/Stanley' : new Date(2011, 8, 4, 7, 0, 0, 0),
+        'America/Asuncion' : new Date(2011, 9, 2, 3, 0, 0, 0),
+        'America/Santiago' : new Date(2011, 9, 9, 3, 0, 0, 0),
+        'America/Campo_Grande' : new Date(2011, 9, 16, 5, 0, 0, 0),
+        'America/Montevideo' : new Date(2011, 9, 2, 3, 0, 0, 0),
+        'America/Sao_Paulo' : new Date(2011, 9, 16, 5, 0, 0, 0),
+        'America/Los_Angeles' : new Date(2011, 2, 13, 8, 0, 0, 0),
+        'America/Santa_Isabel' : new Date(2011, 3, 5, 8, 0, 0, 0),
+        'America/Havana' : new Date(2011, 2, 13, 2, 0, 0, 0),
+        'America/New_York' : new Date(2011, 2, 13, 7, 0, 0, 0),
+        'Asia/Gaza' : new Date(2011, 2, 26, 23, 0, 0, 0),
+        'Asia/Beirut' : new Date(2011, 2, 27, 1, 0, 0, 0),
+        'Europe/Minsk' : new Date(2011, 2, 27, 2, 0, 0, 0),
+        'Europe/Helsinki' : new Date(2011, 2, 27, 4, 0, 0, 0),
+        'Europe/Istanbul' : new Date(2011, 2, 28, 5, 0, 0, 0),
+        'Asia/Damascus' : new Date(2011, 3, 1, 2, 0, 0, 0),
+        'Asia/Jerusalem' : new Date(2011, 3, 1, 6, 0, 0, 0),
+        'Africa/Cairo' : new Date(2010, 3, 30, 4, 0, 0, 0),
+        'Asia/Yerevan' : new Date(2011, 2, 27, 4, 0, 0, 0),
+        'Asia/Baku'    : new Date(2011, 2, 27, 8, 0, 0, 0),
+        'Pacific/Auckland' : new Date(2011, 8, 26, 7, 0, 0, 0),
+        'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0),
+        'America/Halifax' : new Date(2011, 2, 13, 6, 0, 0, 0),
+        'America/Goose_Bay' : new Date(2011, 2, 13, 2, 1, 0, 0),
+        'America/Miquelon' : new Date(2011, 2, 13, 5, 0, 0, 0),
+        'America/Godthab' : new Date(2011, 2, 27, 1, 0, 0, 0)
+    };
+}());
 
 /**
  * The keys in this object are timezones that we know may be ambiguous after
@@ -306,7 +318,7 @@ jstz.olson.ambiguity_list = {
     'America/Chicago' : ['America/Chicago', 'America/Mexico_City'],
     'America/Asuncion' : ['Atlantic/Stanley', 'America/Asuncion', 'America/Santiago', 'America/Campo_Grande'],
     'America/Montevideo' : ['America/Montevideo', 'America/Sao_Paulo'],
-    'Asia/Beirut' : ['Asia/Gaza', 'Asia/Beirut', 'Europe/Minsk', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem', 'Africa/Cairo'],
+    'Asia/Beirut' : ['Asia/Gaza', 'Asia/Beirut', 'Europe/Minsk', 'Europe/Helsinki', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem', 'Africa/Cairo'],
     'Asia/Yerevan' : ['Asia/Yerevan', 'Asia/Baku'],
     'Pacific/Auckland' : ['Pacific/Auckland', 'Pacific/Fiji'],
     'America/Los_Angeles' : ['America/Los_Angeles', 'America/Santa_Isabel'],

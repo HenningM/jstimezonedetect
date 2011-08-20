@@ -104,7 +104,7 @@
   <script type="text/javascript" src='detect_timezone.js'></script>
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
   <script type="text/javascript">
-  $("body").ready(function () {
+  $(document).ready(function () {
         var tz_info = jstz.determine_timezone();
         
         response_text = 'No timezone found for ' + tz_info.key;
