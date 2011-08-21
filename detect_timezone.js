@@ -20,7 +20,8 @@ var jstz = (function () {
          * @returns {Number}
          */
         get_date_offset = function (date) {
-            return -date.getTimezoneOffset();
+            var offset = -date.getTimezoneOffset();
+            return (offset !== null ? offset : 0);
         },
         
         get_january_offset = function () {
