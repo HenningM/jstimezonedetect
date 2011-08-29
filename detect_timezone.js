@@ -88,9 +88,9 @@ var jstz = (function () {
         determine_timezone = function () {
             var timezone_key_info = get_timezone_info(),
                 hemisphere_suffix = timezone_key_info.hemisphere === HEMISPHERE_SOUTH ? ',s' : '',
-                tz_key = timezone_key_info.utc_offset + ',' + timezone_key_info.dst + hemisphere_suffix; 
-
-            return jstz.olson.timezones[tz_key];
+                tz_key = timezone_key_info.utc_offset + ',' + timezone_key_info.dst + hemisphere_suffix;
+                
+            return new jstz.TimeZone(jstz.olson.timezones[tz_key]);
         };
     
     return {
@@ -110,24 +110,20 @@ var jstz = (function () {
  */
 jstz.TimeZone = (function () {
     'use strict';    
-        /**
-        * Prints out the result.
-        * But before it does that, it calls this.ambiguity_check.
-        */
-    var name = function () {
-            if (this.is_ambiguous()) {
-                this.ambiguity_check();
-            }
-            
-            return this.t;
+    var timezone_name = null,
+        uses_dst = null,
+        utc_offset = null,
+        
+        name = function () {
+            return timezone_name;
         },
         
         dst = function () {
-            return this.d;
+            return uses_dst;
         },
         
         offset = function () {
-            return this.o;
+            return utc_offset;
         },
         
         /**
@@ -140,7 +136,7 @@ jstz.TimeZone = (function () {
          * timezones.
          */
         ambiguity_check = function () {
-            var ambiguity_list = jstz.olson.ambiguity_list[this.t],
+            var ambiguity_list = jstz.olson.ambiguity_list[timezone_name],
                 length = ambiguity_list.length, 
                 i = 0,
                 tz = ambiguity_list[0];
@@ -149,7 +145,7 @@ jstz.TimeZone = (function () {
                 tz = ambiguity_list[i];
         
                 if (jstz.date_is_dst(jstz.olson.dst_start_dates[tz])) {
-                    this.t = tz;
+                    timezone_name = tz;
                     return;
                 }   
             }
@@ -159,16 +155,19 @@ jstz.TimeZone = (function () {
          * Checks if it is possible that the timezone is ambiguous.
          */
         is_ambiguous = function () {
-            return typeof (jstz.olson.ambiguity_list[this.t]) !== 'undefined';
+            return typeof (jstz.olson.ambiguity_list[timezone_name]) !== 'undefined';
         },
         
         /**
         * Constructor for jstz.TimeZone
         */
-        Constr = function (o, t, d) {
-            this.o = o;
-            this.t = t;
-            this.d = d;
+        Constr = function (tz_info) {
+            utc_offset = tz_info[0];
+            timezone_name = tz_info[1];
+            uses_dst = tz_info[2];
+            if (is_ambiguous()) {
+                ambiguity_check();
+            }
         };
     
     /**
@@ -176,8 +175,6 @@ jstz.TimeZone = (function () {
      */
     Constr.prototype = {
         constructor : jstz.TimeZone,
-        ambiguity_check : ambiguity_check,
-        is_ambiguous : is_ambiguous,
         name : name,
         dst : dst,
         offset : offset
@@ -187,90 +184,97 @@ jstz.TimeZone = (function () {
 }());
 
 jstz.olson = {};
+
 /*
  * The keys in this dictionary are comma separated as such:
  * 
  * First the offset compared to UTC time in minutes.
  *  
- * Then a flag which is 0 if the timezone does not take daylight savings into account and 1 if it does.
+ * Then a flag which is 0 if the timezone does not take daylight savings into account and 1 if it 
+ * does.
  * 
- * Thirdly an optional 's' signifies that the timezone is in the southern hemisphere, only interesting for timezones with DST.
+ * Thirdly an optional 's' signifies that the timezone is in the southern hemisphere, 
+ * only interesting for timezones with DST.
  * 
- * The values of the dictionary are TimeZone objects.
+ * The mapped arrays is used for constructing the jstz.TimeZone object from within 
+ * jstz.determine_timezone();
  */
-jstz.olson.timezones = {
-    '-720,0'   : new jstz.TimeZone('-12:00', 'Etc/GMT+12', false),
-    '-660,0'   : new jstz.TimeZone('-11:00', 'Pacific/Pago_Pago', false),
-    '-600,1'   : new jstz.TimeZone('-11:00', 'America/Adak', true),
-    '-660,1,s' : new jstz.TimeZone('-11:00', 'Pacific/Apia', true),
-    '-600,0'   : new jstz.TimeZone('-10:00', 'Pacific/Honolulu', false),
-    '-570,0'   : new jstz.TimeZone('-10:30', 'Pacific/Marquesas', false),
-    '-540,0'   : new jstz.TimeZone('-09:00', 'Pacific/Gambier', false),
-    '-540,1'   : new jstz.TimeZone('-09:00', 'America/Anchorage', true),
-    '-480,1'   : new jstz.TimeZone('-08:00', 'America/Los_Angeles', true),
-    '-480,0'   : new jstz.TimeZone('-08:00', 'Pacific/Pitcairn', false),
-    '-420,0'   : new jstz.TimeZone('-07:00', 'America/Phoenix', false),
-    '-420,1'   : new jstz.TimeZone('-07:00', 'America/Denver', true),
-    '-360,0'   : new jstz.TimeZone('-06:00', 'America/Guatemala', false),
-    '-360,1'   : new jstz.TimeZone('-06:00', 'America/Chicago', true),
-    '-360,1,s' : new jstz.TimeZone('-06:00', 'Pacific/Easter', true),
-    '-300,0'   : new jstz.TimeZone('-05:00', 'America/Bogota', false),
-    '-300,1'   : new jstz.TimeZone('-05:00', 'America/New_York', true),
-    '-270,0'   : new jstz.TimeZone('-04:30', 'America/Caracas', false),
-    '-240,1'   : new jstz.TimeZone('-04:00', 'America/Halifax', true),
-    '-240,0'   : new jstz.TimeZone('-04:00', 'America/Santo_Domingo', false),
-    '-240,1,s' : new jstz.TimeZone('-04:00', 'America/Asuncion', true),
-    '-210,1'   : new jstz.TimeZone('-03:30', 'America/St_Johns', true),
-    '-180,1'   : new jstz.TimeZone('-03:00', 'America/Godthab', true),
-    '-180,0'   : new jstz.TimeZone('-03:00', 'America/Argentina/Buenos_Aires', false),
-    '-180,1,s' : new jstz.TimeZone('-03:00', 'America/Montevideo', true),
-    '-120,0'   : new jstz.TimeZone('-02:00', 'America/Noronha', false),
-    '-120,1'   : new jstz.TimeZone('-02:00', 'Etc/GMT+2', true),
-    '-60,1'    : new jstz.TimeZone('-01:00', 'Atlantic/Azores', true),
-    '-60,0'    : new jstz.TimeZone('-01:00', 'Atlantic/Cape_Verde', false),
-    '0,0'      : new jstz.TimeZone('00:00', 'Etc/UTC', false),
-    '0,1'      : new jstz.TimeZone('00:00', 'Europe/London', true),
-    '60,1'     : new jstz.TimeZone('+01:00', 'Europe/Berlin', true),
-    '60,0'     : new jstz.TimeZone('+01:00', 'Africa/Lagos', false),
-    '60,1,s'   : new jstz.TimeZone('+01:00', 'Africa/Windhoek', true),
-    '120,1'    : new jstz.TimeZone('+02:00', 'Asia/Beirut', true),
-    '120,0'    : new jstz.TimeZone('+02:00', 'Africa/Johannesburg', false),
-    '180,1'    : new jstz.TimeZone('+03:00', 'Europe/Moscow', true),
-    '180,0'    : new jstz.TimeZone('+03:00', 'Asia/Baghdad', false),
-    '210,1'    : new jstz.TimeZone('+03:30', 'Asia/Tehran', true),
-    '240,0'    : new jstz.TimeZone('+04:00', 'Asia/Dubai', false),
-    '240,1'    : new jstz.TimeZone('+04:00', 'Asia/Yerevan', true),
-    '270,0'    : new jstz.TimeZone('+04:30', 'Asia/Kabul', false),
-    '300,1'    : new jstz.TimeZone('+05:00', 'Asia/Yekaterinburg', true),
-    '300,0'    : new jstz.TimeZone('+05:00', 'Asia/Karachi', false),
-    '330,0'    : new jstz.TimeZone('+05:30', 'Asia/Kolkata', false),
-    '345,0'    : new jstz.TimeZone('+05:45', 'Asia/Kathmandu', false),
-    '360,0'    : new jstz.TimeZone('+06:00', 'Asia/Dhaka', false),
-    '360,1'    : new jstz.TimeZone('+06:00', 'Asia/Omsk', true),
-    '390,0'    : new jstz.TimeZone('+06:30', 'Asia/Rangoon', false),
-    '420,1'    : new jstz.TimeZone('+07:00', 'Asia/Krasnoyarsk', true),
-    '420,0'    : new jstz.TimeZone('+07:00', 'Asia/Jakarta', false),
-    '480,0'    : new jstz.TimeZone('+08:00', 'Asia/Shanghai', false),
-    '480,1'    : new jstz.TimeZone('+08:00', 'Asia/Irkutsk', true),
-    '525,0'    : new jstz.TimeZone('+08:45', 'Australia/Eucla', true),
-    '525,1,s'  : new jstz.TimeZone('+08:45', 'Australia/Eucla', true),
-    '540,1'    : new jstz.TimeZone('+09:00', 'Asia/Yakutsk', true),
-    '540,0'    : new jstz.TimeZone('+09:00', 'Asia/Tokyo', false),
-    '570,0'    : new jstz.TimeZone('+09:30', 'Australia/Darwin', false),
-    '570,1,s'  : new jstz.TimeZone('+09:30', 'Australia/Adelaide', true),
-    '600,0'    : new jstz.TimeZone('+10:00', 'Australia/Brisbane', false),
-    '600,1'    : new jstz.TimeZone('+10:00', 'Asia/Vladivostok', true),
-    '600,1,s'  : new jstz.TimeZone('+10:00', 'Australia/Sydney', true),
-    '630,1,s'  : new jstz.TimeZone('+10:30', 'Australia/Lord_Howe', true),
-    '660,1'    : new jstz.TimeZone('+11:00', 'Asia/Kamchatka', true),
-    '660,0'    : new jstz.TimeZone('+11:00', 'Pacific/Noumea', false),
-    '690,0'    : new jstz.TimeZone('+11:30', 'Pacific/Norfolk', false),
-    '720,1,s'  : new jstz.TimeZone('+12:00', 'Pacific/Auckland', true),
-    '720,0'    : new jstz.TimeZone('+12:00', 'Pacific/Tarawa', false),
-    '765,1,s'  : new jstz.TimeZone('+12:45', 'Pacific/Chatham', true),
-    '780,0'    : new jstz.TimeZone('+13:00', 'Pacific/Tongatapu', false),
-    '840,0'    : new jstz.TimeZone('+14:00', 'Pacific/Kiritimati', false)
-};
+jstz.olson.timezones = (function () {
+    "use strict";
+    return {
+        '-720,0'   : ['-12:00', 'Etc/GMT+12', false],
+        '-660,0'   : ['-11:00', 'Pacific/Pago_Pago', false],
+        '-600,1'   : ['-11:00', 'America/Adak', true],
+        '-660,1,s' : ['-11:00', 'Pacific/Apia', true],
+        '-600,0'   : ['-10:00', 'Pacific/Honolulu', false],
+        '-570,0'   : ['-10:30', 'Pacific/Marquesas', false],
+        '-540,0'   : ['-09:00', 'Pacific/Gambier', false],
+        '-540,1'   : ['-09:00', 'America/Anchorage', true],
+        '-480,1'   : ['-08:00', 'America/Los_Angeles', true],
+        '-480,0'   : ['-08:00', 'Pacific/Pitcairn', false],
+        '-420,0'   : ['-07:00', 'America/Phoenix', false],
+        '-420,1'   : ['-07:00', 'America/Denver', true],
+        '-360,0'   : ['-06:00', 'America/Guatemala', false],
+        '-360,1'   : ['-06:00', 'America/Chicago', true],
+        '-360,1,s' : ['-06:00', 'Pacific/Easter', true],
+        '-300,0'   : ['-05:00', 'America/Bogota', false],
+        '-300,1'   : ['-05:00', 'America/New_York', true],
+        '-270,0'   : ['-04:30', 'America/Caracas', false],
+        '-240,1'   : ['-04:00', 'America/Halifax', true],
+        '-240,0'   : ['-04:00', 'America/Santo_Domingo', false],
+        '-240,1,s' : ['-04:00', 'America/Asuncion', true],
+        '-210,1'   : ['-03:30', 'America/St_Johns', true],
+        '-180,1'   : ['-03:00', 'America/Godthab', true],
+        '-180,0'   : ['-03:00', 'America/Argentina/Buenos_Aires', false],
+        '-180,1,s' : ['-03:00', 'America/Montevideo', true],
+        '-120,0'   : ['-02:00', 'America/Noronha', false],
+        '-120,1'   : ['-02:00', 'Etc/GMT+2', true],
+        '-60,1'    : ['-01:00', 'Atlantic/Azores', true],
+        '-60,0'    : ['-01:00', 'Atlantic/Cape_Verde', false],
+        '0,0'      : ['00:00', 'Etc/UTC', false],
+        '0,1'      : ['00:00', 'Europe/London', true],
+        '60,1'     : ['+01:00', 'Europe/Berlin', true],
+        '60,0'     : ['+01:00', 'Africa/Lagos', false],
+        '60,1,s'   : ['+01:00', 'Africa/Windhoek', true],
+        '120,1'    : ['+02:00', 'Asia/Beirut', true],
+        '120,0'    : ['+02:00', 'Africa/Johannesburg', false],
+        '180,1'    : ['+03:00', 'Europe/Moscow', true],
+        '180,0'    : ['+03:00', 'Asia/Baghdad', false],
+        '210,1'    : ['+03:30', 'Asia/Tehran', true],
+        '240,0'    : ['+04:00', 'Asia/Dubai', false],
+        '240,1'    : ['+04:00', 'Asia/Yerevan', true],
+        '270,0'    : ['+04:30', 'Asia/Kabul', false],
+        '300,1'    : ['+05:00', 'Asia/Yekaterinburg', true],
+        '300,0'    : ['+05:00', 'Asia/Karachi', false],
+        '330,0'    : ['+05:30', 'Asia/Kolkata', false],
+        '345,0'    : ['+05:45', 'Asia/Kathmandu', false],
+        '360,0'    : ['+06:00', 'Asia/Dhaka', false],
+        '360,1'    : ['+06:00', 'Asia/Omsk', true],
+        '390,0'    : ['+06:30', 'Asia/Rangoon', false],
+        '420,1'    : ['+07:00', 'Asia/Krasnoyarsk', true],
+        '420,0'    : ['+07:00', 'Asia/Jakarta', false],
+        '480,0'    : ['+08:00', 'Asia/Shanghai', false],
+        '480,1'    : ['+08:00', 'Asia/Irkutsk', true],
+        '525,0'    : ['+08:45', 'Australia/Eucla', true],
+        '525,1,s'  : ['+08:45', 'Australia/Eucla', true],
+        '540,1'    : ['+09:00', 'Asia/Yakutsk', true],
+        '540,0'    : ['+09:00', 'Asia/Tokyo', false],
+        '570,0'    : ['+09:30', 'Australia/Darwin', false],
+        '570,1,s'  : ['+09:30', 'Australia/Adelaide', true],
+        '600,0'    : ['+10:00', 'Australia/Brisbane', false],
+        '600,1'    : ['+10:00', 'Asia/Vladivostok', true],
+        '600,1,s'  : ['+10:00', 'Australia/Sydney', true],
+        '630,1,s'  : ['+10:30', 'Australia/Lord_Howe', true],
+        '660,1'    : ['+11:00', 'Asia/Kamchatka', true],
+        '660,0'    : ['+11:00', 'Pacific/Noumea', false],
+        '690,0'    : ['+11:30', 'Pacific/Norfolk', false],
+        '720,1,s'  : ['+12:00', 'Pacific/Auckland', true],
+        '720,0'    : ['+12:00', 'Pacific/Tarawa', false],
+        '765,1,s'  : ['+12:45', 'Pacific/Chatham', true],
+        '780,0'    : ['+13:00', 'Pacific/Tongatapu', false],
+        '840,0'    : ['+14:00', 'Pacific/Kiritimati', false]
+    };
+}());
 
 /**
  * This object contains information on when daylight savings starts for
