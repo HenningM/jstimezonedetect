@@ -90,7 +90,7 @@ var jstz = (function () {
                 hemisphere_suffix = timezone_key_info.hemisphere === HEMISPHERE_SOUTH ? ',s' : '',
                 tz_key = timezone_key_info.utc_offset + ',' + timezone_key_info.dst + hemisphere_suffix; 
 
-            return {'timezone' : jstz.olson.timezones[tz_key], 'key' : tz_key};
+            return jstz.olson.timezones[tz_key];
         };
     
     return {
@@ -114,13 +114,22 @@ jstz.TimeZone = (function () {
         * Prints out the result.
         * But before it does that, it calls this.ambiguity_check.
         */
-    var display = function () {
+    var name = function () {
             if (this.is_ambiguous()) {
                 this.ambiguity_check();
             }
             
-            return '<b>Zoneinfo key</b>: ' + this.olson_tz;
+            return this.t;
         },
+        
+        dst = function () {
+            return this.d;
+        },
+        
+        offset = function () {
+            return this.o;
+        },
+        
         /**
          * Checks if a timezone has possible ambiguities. I.e timezones that are similar.
          * 
@@ -131,7 +140,7 @@ jstz.TimeZone = (function () {
          * timezones.
          */
         ambiguity_check = function () {
-            var ambiguity_list = jstz.olson.ambiguity_list[this.olson_tz],
+            var ambiguity_list = jstz.olson.ambiguity_list[this.t],
                 length = ambiguity_list.length, 
                 i = 0,
                 tz = ambiguity_list[0];
@@ -140,7 +149,7 @@ jstz.TimeZone = (function () {
                 tz = ambiguity_list[i];
         
                 if (jstz.date_is_dst(jstz.olson.dst_start_dates[tz])) {
-                    this.olson_tz = tz;
+                    this.t = tz;
                     return;
                 }   
             }
@@ -150,16 +159,16 @@ jstz.TimeZone = (function () {
          * Checks if it is possible that the timezone is ambiguous.
          */
         is_ambiguous = function () {
-            return typeof (jstz.olson.ambiguity_list[this.olson_tz]) !== 'undefined';
+            return typeof (jstz.olson.ambiguity_list[this.t]) !== 'undefined';
         },
         
         /**
         * Constructor for jstz.TimeZone
         */
-        Constr = function (offset, olson_tz, uses_dst) {
-            this.utc_offset = offset;
-            this.olson_tz = olson_tz;
-            this.uses_dst = uses_dst;   
+        Constr = function (o, t, d) {
+            this.o = o;
+            this.t = t;
+            this.d = d;
         };
     
     /**
@@ -167,9 +176,11 @@ jstz.TimeZone = (function () {
      */
     Constr.prototype = {
         constructor : jstz.TimeZone,
-        display : display,
         ambiguity_check : ambiguity_check,
-        is_ambiguous : is_ambiguous
+        is_ambiguous : is_ambiguous,
+        name : name,
+        dst : dst,
+        offset : offset
     };
     
     return Constr;
@@ -272,7 +283,7 @@ jstz.olson.timezones = {
  * Each value is a date denoting when daylight savings starts for that timezone.
  */
 jstz.olson.dst_start_dates = (function () {
-    "use strict"
+    "use strict";
     return {
         'America/Denver' : new Date(2011, 2, 13, 3, 0, 0, 0),
         'America/Mazatlan' : new Date(2011, 3, 3, 3, 0, 0, 0),
