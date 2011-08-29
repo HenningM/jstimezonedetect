@@ -11,8 +11,6 @@
 var jstz = (function () {
     'use strict';
     var HEMISPHERE_SOUTH = 'SOUTH',
-        HEMISPHERE_NORTH = 'NORTH',
-        HEMISPHERE_UNKNOWN = 'N/A',
         
         /** 
          * Gets the offset in minutes from UTC for a certain date.
@@ -52,29 +50,23 @@ var jstz = (function () {
          * This function does some basic calculations to create information about 
          * the user's timezone.
          * 
-         * Returns a primitive object on the format
-         * {'utc_offset' : -9, 'dst': 1, hemisphere' : 'north'}
-         * where dst is 1 if the region uses daylight savings.
+         * Returns a key that can be used to do lookups in jstz.olson.timezones.
          * 
-         * @returns {Object}  
+         * @returns {String}  
          */
-        get_timezone_info = function () {
+        
+        lookup_key = function () {
             var january_offset = get_january_offset(), 
                 june_offset = get_june_offset(), 
-                diff = get_january_offset() - get_june_offset(),
-                TzInfo = function (o, d, h) {
-                    this.utc_offset = o;
-                    this.dst = d;
-                    this.hemisphere = h;
-                };
-        
+                diff = get_january_offset() - get_june_offset();
+                
             if (diff < 0) {
-                return new TzInfo(january_offset, 1, HEMISPHERE_NORTH);
+                return january_offset + ",1";
             } else if (diff > 0) {
-                return new TzInfo(june_offset, 1, HEMISPHERE_SOUTH);
+                return june_offset + ",1," + HEMISPHERE_SOUTH;
             }
-    
-            return new TzInfo(january_offset, 0, HEMISPHERE_UNKNOWN);
+            
+            return january_offset + ",0";
         },
     
         /**
@@ -86,11 +78,8 @@ var jstz = (function () {
          * @returns Object 
          */
         determine_timezone = function () {
-            var timezone_key_info = get_timezone_info(),
-                hemisphere_suffix = timezone_key_info.hemisphere === HEMISPHERE_SOUTH ? ',s' : '',
-                tz_key = timezone_key_info.utc_offset + ',' + timezone_key_info.dst + hemisphere_suffix;
-                
-            return new jstz.TimeZone(jstz.olson.timezones[tz_key]);
+            var key = lookup_key();
+            return new jstz.TimeZone(jstz.olson.timezones[key]);
         };
     
     return {
