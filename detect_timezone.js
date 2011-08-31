@@ -12,7 +12,7 @@ var jstz = (function () {
     'use strict';
     var HEMISPHERE_SOUTH = 'SOUTH',
         preliminary_result = null,
-        callback = null,
+        config = null,
         
         /** 
          * Gets the offset in minutes from UTC for a certain date.
@@ -48,15 +48,6 @@ var jstz = (function () {
             return (base_offset - date_offset) !== 0;
         },
     
-        /**
-         * This function does some basic calculations to create information about 
-         * the user's timezone.
-         * 
-         * Returns a key that can be used to do lookups in jstz.olson.timezones.
-         * 
-         * @returns {String}  
-         */
-        
         lookup_key = function () {
             var january_offset = get_january_offset(), 
                 june_offset = get_june_offset(), 
@@ -71,47 +62,67 @@ var jstz = (function () {
             return january_offset + ",0";
         },
     
-        doIpLookup = function (preliminary_result, callback) {
-            var url = "http://www.pageloom.com/ip-to-tz/?callback=jstz.handleIpLookup";
+        ip_lookup = function () {
+            var url = "http://www.pageloom.com/timezone/api/?callback=jstz.tz_lookup_callback";
             var script = document.createElement('script');
             script.src = url;
             document.body.appendChild(script);
         },
         
-        handleIpLookup = function (ip_timezone_data) {
-            if (ip_timezone_data.timezone !== preliminary_result.name()) {
-                preliminary_result.compare_with(ip_timezone_data);
-                callback(preliminary_result);
-                return;
+        geo_lookup_fallback = function (error) {
+            if (config.ip) {
+                ip_lookup();
             }
-            callback(preliminary_result);
+            else {
+                config.callback(preliminary_result);
+            }
         },
         
-        /**
-         * Uses get_timezone_info() to formulate a key to use in the olson.timezones dictionary.
-         * 
-         * Returns a primitive object on the format:
-         * {'timezone': TimeZone, 'key' : 'the key used to find the TimeZone object'}
-         * 
-         * @returns Object 
-         */
-        determine_timezone = function (return_function) {
-            var key = lookup_key();
-            
-            preliminary_result = new jstz.TimeZone(jstz.olson.timezones[key]);
-            
-            if (!return_function) {
-                return preliminary_result;
+        geo_lookup_callback = function (position) {
+            var url = "http://www.pageloom.com/timezone/api/?callback=jstz.tz_lookup_callback&latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude;
+            var script = document.createElement('script');
+            script.src = url;
+            document.body.appendChild(script);
+        },
+        
+        geo_lookup = function () {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(geo_lookup_callback, geo_lookup_fallback);
             }
             
-            callback = return_function;
+            geo_lookup_fallback();
+        },
+        
+        tz_lookup_callback = function (ip_timezone_data) {
+            if (ip_timezone_data.timezone !== preliminary_result.name()) {
+                preliminary_result.compare_with(ip_timezone_data);
+                config.callback(preliminary_result);
+                return;
+            }
+            config.callback(preliminary_result);
+        },
+        
+        determine = function (settings) {
+            var key = lookup_key();
+            config = settings;
             
-            doIpLookup(preliminary_result, callback);
+            // Result via pure JavaScript
+            preliminary_result = new jstz.TimeZone(jstz.olson.timezones[key]);
+            
+            if (!config.geoloc) {
+                if (config.ip) {
+                    ip_lookup();
+                } else {
+                    config.callback(preliminary_result);
+                }                
+            } else {
+                geo_lookup();
+            }
         };
     
     return {
-        determine_timezone : determine_timezone,
-        handleIpLookup : handleIpLookup,
+        determine : determine,
+        tz_lookup_callback : tz_lookup_callback,
         date_is_dst : date_is_dst
     };
 }());
