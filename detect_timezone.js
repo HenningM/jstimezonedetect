@@ -94,10 +94,10 @@ var jstz = (function () {
         },
         
         tz_lookup_callback = function (ip_timezone_data) {
-            if (ip_timezone_data.timezone !== preliminary_result.name()) {
-                preliminary_result.compare_with(ip_timezone_data);
-                config.callback(preliminary_result);
-                return;
+            if (ip_timezone_data) {
+                if (ip_timezone_data.timezone !== preliminary_result.name()) {
+                    preliminary_result.compare_with(ip_timezone_data);
+                }
             }
             config.callback(preliminary_result);
         },
