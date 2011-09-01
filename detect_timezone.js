@@ -63,23 +63,25 @@ var jstz = (function () {
         },
     
         ip_lookup = function () {
-            var url = "http://www.pageloom.com/timezone/api/?callback=jstz.tz_lookup_callback";
+            var url = "http://www.pageloom.com/timezone/api/?callback=jstz.api_callback";
             var script = document.createElement('script');
             script.src = url;
             document.body.appendChild(script);
+            if (!config.blocking) {
+                config.callback(preliminary_result);
+            }
         },
         
-        geo_lookup_fallback = function (error) {
+        geo_lookup_fallback = function () {
             if (config.ip) {
                 ip_lookup();
-            }
-            else {
+            } else {
                 config.callback(preliminary_result);
             }
         },
         
         geo_lookup_callback = function (position) {
-            var url = "http://www.pageloom.com/timezone/api/?callback=jstz.tz_lookup_callback&latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude;
+            var url = "http://www.pageloom.com/timezone/api/?callback=jstz.api_callback&latitude=" + position.coords.latitude + "&longitude=" + position.coords.longitude;
             var script = document.createElement('script');
             script.src = url;
             document.body.appendChild(script);
@@ -87,19 +89,26 @@ var jstz = (function () {
         
         geo_lookup = function () {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(geo_lookup_callback, geo_lookup_fallback);
+                navigator.geolocation.getCurrentPosition(geo_lookup_callback, function () {
+                        if (config.blocking) {
+                            geo_lookup_fallback();
+                        }
+                    }
+                );
             }
             
-            geo_lookup_fallback();
+            if (!config.blocking) {
+                geo_lookup_fallback();
+            }
         },
         
-        tz_lookup_callback = function (ip_timezone_data) {
-            if (ip_timezone_data) {
-                if (ip_timezone_data.timezone !== preliminary_result.name()) {
-                    preliminary_result.compare_with(ip_timezone_data);
+        api_callback = function (timezone_data) {
+            if (timezone_data) {
+                if (timezone_data.timezone !== preliminary_result.name()) {
+                    preliminary_result.compare_with(timezone_data);
+                    config.callback(preliminary_result);
                 }
             }
-            config.callback(preliminary_result);
         },
         
         determine = function (settings) {
@@ -109,20 +118,19 @@ var jstz = (function () {
             // Result via pure JavaScript
             preliminary_result = new jstz.TimeZone(jstz.olson.timezones[key]);
             
-            if (!config.geoloc) {
-                if (config.ip) {
-                    ip_lookup();
-                } else {
-                    config.callback(preliminary_result);
-                }                
-            } else {
+            if (config.geoloc) {
                 geo_lookup();
+            } else if (config.ip) {
+                ip_lookup();
+            } else {
+                settings.callback(preliminary_result);    
             }
+            
         };
     
     return {
         determine : determine,
-        tz_lookup_callback : tz_lookup_callback,
+        api_callback : api_callback,
         date_is_dst : date_is_dst
     };
 }());
