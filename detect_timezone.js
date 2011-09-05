@@ -10,7 +10,7 @@
  */
 var jstz = (function () {
     'use strict';
-    var HEMISPHERE_SOUTH = 'SOUTH',
+    var HEMISPHERE_SOUTH = 's',
         
         /** 
          * Gets the offset in minutes from UTC for a certain date.
