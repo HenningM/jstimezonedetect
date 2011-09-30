@@ -196,7 +196,7 @@ jstz.olson.timezones = (function () {
         '-600,1'   : ['-11:00', 'America/Adak', true],
         '-660,1,s' : ['-11:00', 'Pacific/Apia', true],
         '-600,0'   : ['-10:00', 'Pacific/Honolulu', false],
-        '-570,0'   : ['-10:30', 'Pacific/Marquesas', false],
+        '-570,0'   : ['-09:30', 'Pacific/Marquesas', false],
         '-540,0'   : ['-09:00', 'Pacific/Gambier', false],
         '-540,1'   : ['-09:00', 'America/Anchorage', true],
         '-480,1'   : ['-08:00', 'America/Los_Angeles', true],
