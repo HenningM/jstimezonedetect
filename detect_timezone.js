@@ -194,7 +194,6 @@ jstz.olson.timezones = (function () {
         '-720,0'   : ['-12:00', 'Etc/GMT+12', false],
         '-660,0'   : ['-11:00', 'Pacific/Pago_Pago', false],
         '-600,1'   : ['-11:00', 'America/Adak', true],
-        '-660,1,s' : ['-11:00', 'Pacific/Apia', true],
         '-600,0'   : ['-10:00', 'Pacific/Honolulu', false],
         '-570,0'   : ['-09:30', 'Pacific/Marquesas', false],
         '-540,0'   : ['-09:00', 'Pacific/Gambier', false],
@@ -261,6 +260,7 @@ jstz.olson.timezones = (function () {
         '720,0'    : ['+12:00', 'Pacific/Tarawa', false],
         '765,1,s'  : ['+12:45', 'Pacific/Chatham', true],
         '780,0'    : ['+13:00', 'Pacific/Tongatapu', false],
+        '780,1,s'  : ['+13:00', 'Pacific/Apia', true],
         '840,0'    : ['+14:00', 'Pacific/Kiritimati', false]
     };
 }());
