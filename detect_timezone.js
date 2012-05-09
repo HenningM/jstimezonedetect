@@ -1,10 +1,3 @@
-/* 
- * Original script by Josh Fraser (http://www.onlineaspect.com)
- * Continued and maintained by Jon Nylander at https://bitbucket.org/pellepim/jstimezonedetect
- *
- * Provided under the Do Whatever You Want With This Code License.
- */
-
 /**
  * Namespace to hold all the code for timezone detection.
  */
@@ -89,40 +82,24 @@ var jstz = (function () {
 }());
 
 /**
- * A simple object containing information of utc_offset, which olson timezone key to use, 
- * and if the timezone cares about daylight savings or not.
- * 
- * @constructor
- * @param {string} offset - for example '-11:00'
- * @param {string} olson_tz - the olson Identifier, such as "America/Denver"
- * @param {boolean} uses_dst - flag for whether the time zone somehow cares about daylight savings.
+ * Simple object to perform ambiguity check and to return name of time zone.
  */
-jstz.TimeZone = (function () {
+jstz.TimeZone = function (tz_name) {
     'use strict';    
     var timezone_name = null,
-        uses_dst = null,
-        utc_offset = null,
         
         name = function () {
             return timezone_name;
         },
         
-        dst = function () {
-            return uses_dst;
-        },
-        
-        offset = function () {
-            return utc_offset;
-        },
-        
         /**
          * Checks if a timezone has possible ambiguities. I.e timezones that are similar.
          * 
-         * If the preliminary scan determines that we're in America/Denver. We double check
-         * here that we're really there and not in America/Mazatlan.
+         * For example, if the preliminary scan determines that we're in America/Denver. 
+         * We double check here that we're really there and not in America/Mazatlan.
          * 
          * This is done by checking known dates for when daylight savings start for different
-         * timezones.
+         * timezones during 2010 and 2011.
          */
         ambiguity_check = function () {
             var ambiguity_list = jstz.olson.ambiguity_list[timezone_name],
@@ -145,32 +122,19 @@ jstz.TimeZone = (function () {
          */
         is_ambiguous = function () {
             return typeof (jstz.olson.ambiguity_list[timezone_name]) !== 'undefined';
-        },
-        
-        /**
-        * Constructor for jstz.TimeZone
-        */
-        Constr = function (tz_info) {
-            utc_offset = tz_info[0];
-            timezone_name = tz_info[1];
-            uses_dst = tz_info[2];
-            if (is_ambiguous()) {
-                ambiguity_check();
-            }
         };
+        
+        
     
-    /**
-     * Public API for jstz.TimeZone
-     */
-    Constr.prototype = {
-        constructor : jstz.TimeZone,
-        name : name,
-        dst : dst,
-        offset : offset
+    timezone_name = tz_name;
+    if (is_ambiguous()) {
+        ambiguity_check();
+    }
+    
+    return {
+        name: name
     };
-    
-    return Constr;
-}());
+};
 
 jstz.olson = {};
 
@@ -191,77 +155,77 @@ jstz.olson = {};
 jstz.olson.timezones = (function () {
     "use strict";
     return {
-        '-720,0'   : ['-12:00', 'Etc/GMT+12', false],
-        '-660,0'   : ['-11:00', 'Pacific/Pago_Pago', false],
-        '-600,1'   : ['-11:00', 'America/Adak', true],
-        '-600,0'   : ['-10:00', 'Pacific/Honolulu', false],
-        '-570,0'   : ['-09:30', 'Pacific/Marquesas', false],
-        '-540,0'   : ['-09:00', 'Pacific/Gambier', false],
-        '-540,1'   : ['-09:00', 'America/Anchorage', true],
-        '-480,1'   : ['-08:00', 'America/Los_Angeles', true],
-        '-480,0'   : ['-08:00', 'Pacific/Pitcairn', false],
-        '-420,0'   : ['-07:00', 'America/Phoenix', false],
-        '-420,1'   : ['-07:00', 'America/Denver', true],
-        '-360,0'   : ['-06:00', 'America/Guatemala', false],
-        '-360,1'   : ['-06:00', 'America/Chicago', true],
-        '-360,1,s' : ['-06:00', 'Pacific/Easter', true],
-        '-300,0'   : ['-05:00', 'America/Bogota', false],
-        '-300,1'   : ['-05:00', 'America/New_York', true],
-        '-270,0'   : ['-04:30', 'America/Caracas', false],
-        '-240,1'   : ['-04:00', 'America/Halifax', true],
-        '-240,0'   : ['-04:00', 'America/Santo_Domingo', false],
-        '-240,1,s' : ['-04:00', 'America/Asuncion', true],
-        '-210,1'   : ['-03:30', 'America/St_Johns', true],
-        '-180,1'   : ['-03:00', 'America/Godthab', true],
-        '-180,0'   : ['-03:00', 'America/Argentina/Buenos_Aires', false],
-        '-180,1,s' : ['-03:00', 'America/Montevideo', true],
-        '-120,0'   : ['-02:00', 'America/Noronha', false],
-        '-120,1'   : ['-02:00', 'Etc/GMT+2', true],
-        '-60,1'    : ['-01:00', 'Atlantic/Azores', true],
-        '-60,0'    : ['-01:00', 'Atlantic/Cape_Verde', false],
-        '0,0'      : ['00:00', 'Etc/UTC', false],
-        '0,1'      : ['00:00', 'Europe/London', true],
-        '60,1'     : ['+01:00', 'Europe/Berlin', true],
-        '60,0'     : ['+01:00', 'Africa/Lagos', false],
-        '60,1,s'   : ['+01:00', 'Africa/Windhoek', true],
-        '120,1'    : ['+02:00', 'Asia/Beirut', true],
-        '120,0'    : ['+02:00', 'Africa/Johannesburg', false],
-        '180,1'    : ['+03:00', 'Europe/Moscow', true],
-        '180,0'    : ['+03:00', 'Asia/Baghdad', false],
-        '210,1'    : ['+03:30', 'Asia/Tehran', true],
-        '240,0'    : ['+04:00', 'Asia/Dubai', false],
-        '240,1'    : ['+04:00', 'Asia/Yerevan', true],
-        '270,0'    : ['+04:30', 'Asia/Kabul', false],
-        '300,1'    : ['+05:00', 'Asia/Yekaterinburg', true],
-        '300,0'    : ['+05:00', 'Asia/Karachi', false],
-        '330,0'    : ['+05:30', 'Asia/Kolkata', false],
-        '345,0'    : ['+05:45', 'Asia/Kathmandu', false],
-        '360,0'    : ['+06:00', 'Asia/Dhaka', false],
-        '360,1'    : ['+06:00', 'Asia/Omsk', true],
-        '390,0'    : ['+06:30', 'Asia/Rangoon', false],
-        '420,1'    : ['+07:00', 'Asia/Krasnoyarsk', true],
-        '420,0'    : ['+07:00', 'Asia/Jakarta', false],
-        '480,0'    : ['+08:00', 'Asia/Shanghai', false],
-        '480,1'    : ['+08:00', 'Asia/Irkutsk', true],
-        '525,0'    : ['+08:45', 'Australia/Eucla', true],
-        '525,1,s'  : ['+08:45', 'Australia/Eucla', true],
-        '540,1'    : ['+09:00', 'Asia/Yakutsk', true],
-        '540,0'    : ['+09:00', 'Asia/Tokyo', false],
-        '570,0'    : ['+09:30', 'Australia/Darwin', false],
-        '570,1,s'  : ['+09:30', 'Australia/Adelaide', true],
-        '600,0'    : ['+10:00', 'Australia/Brisbane', false],
-        '600,1'    : ['+10:00', 'Asia/Vladivostok', true],
-        '600,1,s'  : ['+10:00', 'Australia/Sydney', true],
-        '630,1,s'  : ['+10:30', 'Australia/Lord_Howe', true],
-        '660,1'    : ['+11:00', 'Asia/Kamchatka', true],
-        '660,0'    : ['+11:00', 'Pacific/Noumea', false],
-        '690,0'    : ['+11:30', 'Pacific/Norfolk', false],
-        '720,1,s'  : ['+12:00', 'Pacific/Auckland', true],
-        '720,0'    : ['+12:00', 'Pacific/Tarawa', false],
-        '765,1,s'  : ['+12:45', 'Pacific/Chatham', true],
-        '780,0'    : ['+13:00', 'Pacific/Tongatapu', false],
-        '780,1,s'  : ['+13:00', 'Pacific/Apia', true],
-        '840,0'    : ['+14:00', 'Pacific/Kiritimati', false]
+        '-720,0'   : 'Etc/GMT+12',
+        '-660,0'   : 'Pacific/Pago_Pago',
+        '-600,1'   : 'America/Adak',
+        '-600,0'   : 'Pacific/Honolulu',
+        '-570,0'   : 'Pacific/Marquesas',
+        '-540,0'   : 'Pacific/Gambier',
+        '-540,1'   : 'America/Anchorage',
+        '-480,1'   : 'America/Los_Angeles',
+        '-480,0'   : 'Pacific/Pitcairn',
+        '-420,0'   : 'America/Phoenix',
+        '-420,1'   : 'America/Denver',
+        '-360,0'   : 'America/Guatemala',
+        '-360,1'   : 'America/Chicago',
+        '-360,1,s' : 'Pacific/Easter',
+        '-300,0'   : 'America/Bogota',
+        '-300,1'   : 'America/New_York',
+        '-270,0'   : 'America/Caracas',
+        '-240,1'   : 'America/Halifax',
+        '-240,0'   : 'America/Santo_Domingo',
+        '-240,1,s' : 'America/Asuncion',
+        '-210,1'   : 'America/St_Johns',
+        '-180,1'   : 'America/Godthab',
+        '-180,0'   : 'America/Argentina/Buenos_Aires',
+        '-180,1,s' : 'America/Montevideo',
+        '-120,0'   : 'America/Noronha',
+        '-120,1'   : 'Etc/GMT+2',
+        '-60,1'    : 'Atlantic/Azores',
+        '-60,0'    : 'Atlantic/Cape_Verde',
+        '0,0'      : 'Etc/UTC',
+        '0,1'      : 'Europe/London',
+        '60,1'     : 'Europe/Berlin',
+        '60,0'     : 'Africa/Lagos',
+        '60,1,s'   : 'Africa/Windhoek',
+        '120,1'    : 'Asia/Beirut',
+        '120,0'    : 'Africa/Johannesburg',
+        '180,1'    : 'Europe/Moscow',
+        '180,0'    : 'Asia/Baghdad',
+        '210,1'    : 'Asia/Tehran',
+        '240,0'    : 'Asia/Dubai',
+        '240,1'    : 'Asia/Yerevan',
+        '270,0'    : 'Asia/Kabul',
+        '300,1'    : 'Asia/Yekaterinburg',
+        '300,0'    : 'Asia/Karachi',
+        '330,0'    : 'Asia/Kolkata',
+        '345,0'    : 'Asia/Kathmandu',
+        '360,0'    : 'Asia/Dhaka',
+        '360,1'    : 'Asia/Omsk',
+        '390,0'    : 'Asia/Rangoon',
+        '420,1'    : 'Asia/Krasnoyarsk',
+        '420,0'    : 'Asia/Jakarta',
+        '480,0'    : 'Asia/Shanghai',
+        '480,1'    : 'Asia/Irkutsk',
+        '525,0'    : 'Australia/Eucla',
+        '525,1,s'  : 'Australia/Eucla',
+        '540,1'    : 'Asia/Yakutsk',
+        '540,0'    : 'Asia/Tokyo',
+        '570,0'    : 'Australia/Darwin',
+        '570,1,s'  : 'Australia/Adelaide',
+        '600,0'    : 'Australia/Brisbane',
+        '600,1'    : 'Asia/Vladivostok',
+        '600,1,s'  : 'Australia/Sydney',
+        '630,1,s'  : 'Australia/Lord_Howe',
+        '660,1'    : 'Asia/Kamchatka',
+        '660,0'    : 'Pacific/Noumea',
+        '690,0'    : 'Pacific/Norfolk',
+        '720,1,s'  : 'Pacific/Auckland',
+        '720,0'    : 'Pacific/Tarawa',
+        '765,1,s'  : 'Pacific/Chatham',
+        '780,0'    : 'Pacific/Tongatapu',
+        '780,1,s'  : 'Pacific/Apia',
+        '840,0'    : 'Pacific/Kiritimati'
     };
 }());
 
