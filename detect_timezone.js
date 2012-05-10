@@ -1,5 +1,6 @@
 /*jslint undef: true */
 /*global console*/
+/*version 2012-05-10*/
 
 /**
  * Namespace to hold all the code for timezone detection.
