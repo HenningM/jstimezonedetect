@@ -1,0 +1,5 @@
+{
+  "name": "jstz",
+  "description": "Detection of timezone in the browser.",
+  "version": "0.1.0"
+}
