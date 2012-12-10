@@ -6,3 +6,4 @@ function determine_current_timezone() {
 }
 
 determine_current_timezone();
+

@@ -42,8 +42,53 @@
                                                   : get_january_offset())),
                   date_offset = get_date_offset(date);
 
+<<<<<<< local
+/**
+ * This object contains information on when daylight savings starts for
+ * different timezones.
+ * 
+ * The list is short for a reason. Often we do not have to be very specific
+ * to single out the correct timezone. But when we do, this list comes in
+ * handy.
+ * 
+ * Each value is a date denoting when daylight savings starts for that timezone.
+ */
+jstz.olson.dst_start_dates = {
+    'America/Denver': new Date(2011, 2, 13, 3, 0, 0, 0),
+    'America/Mazatlan': new Date(2011, 3, 3, 3, 0, 0, 0),
+    'America/Chicago': new Date(2011, 2, 13, 3, 0, 0, 0),
+    'America/Mexico_City': new Date(2011, 3, 3, 3, 0, 0, 0),
+    'Atlantic/Stanley': new Date(2011, 8, 4, 7, 0, 0, 0),
+    'America/Asuncion': new Date(2011, 9, 2, 3, 0, 0, 0),
+    'America/Santiago': new Date(2011, 9, 9, 3, 0, 0, 0),
+    'America/Campo_Grande': new Date(2011, 9, 16, 5, 0, 0, 0),
+    'America/Montevideo': new Date(2011, 9, 2, 3, 0, 0, 0),
+    'America/Sao_Paulo': new Date(2011, 9, 16, 5, 0, 0, 0),
+    'America/Los_Angeles': new Date(2011, 2, 13, 8, 0, 0, 0),
+    'America/Santa_Isabel': new Date(2011, 3, 5, 8, 0, 0, 0),
+    'America/Havana': new Date(2011, 2, 13, 2, 0, 0, 0),
+    'America/New_York': new Date(2011, 2, 13, 7, 0, 0, 0),
+    'Asia/Gaza': new Date(2011, 2, 26, 23, 0, 0, 0),
+    'Asia/Beirut': new Date(2011, 2, 27, 1, 0, 0, 0),
+    'Europe/Minsk': new Date(2011, 2, 27, 2, 0, 0, 0),
+    'Europe/Helsinki': new Date(2011, 2, 27, 4, 0, 0, 0),
+    'Europe/Istanbul': new Date(2011, 2, 28, 5, 0, 0, 0),
+    'Asia/Damascus': new Date(2011, 3, 1, 2, 0, 0, 0),
+    'Asia/Jerusalem': new Date(2011, 3, 1, 6, 0, 0, 0),
+    'Africa/Cairo': new Date(2010, 3, 30, 4, 0, 0, 0),
+    'Asia/Yerevan': new Date(2011, 2, 27, 4, 0, 0, 0),
+    'Asia/Baku': new Date(2011, 2, 27, 8, 0, 0, 0),
+    'Pacific/Auckland': new Date(2011, 8, 26, 7, 0, 0, 0),
+    'Pacific/Fiji': new Date(2010, 11, 29, 23, 0, 0, 0),
+    'America/Halifax': new Date(2011, 2, 13, 6, 0, 0, 0),
+    'America/Goose_Bay': new Date(2011, 2, 13, 2, 1, 0, 0),
+    'America/Miquelon': new Date(2011, 2, 13, 5, 0, 0, 0),
+    'America/Godthab': new Date(2011, 2, 27, 1, 0, 0, 0)
+};
+=======
               return (base_offset - date_offset) !== 0;
           },
+>>>>>>> other
 
           /**
            * This function does some basic calculations to create information about

@@ -1,7 +1,5 @@
 /*jslint undef: true */
-/*global console*/
-/*global exports*/
-/*version 2012-05-10*/
+/*global console, exports*/
 
 (function(root) {
   /**
@@ -23,7 +21,7 @@
 
           get_date = function (month, date) {
               var d = new Date();
-              d.setDate(date);              
+              d.setDate(date);
               d.setMonth(month);
               return d;
           },
@@ -208,11 +206,11 @@
       '60,1,s'   : 'Africa/Windhoek',
       '120,1'    : 'Asia/Beirut',
       '120,0'    : 'Africa/Johannesburg',
-      '180,1'    : 'Europe/Moscow',
       '180,0'    : 'Asia/Baghdad',
+      '180,1'    : 'Europe/Moscow',
       '210,1'    : 'Asia/Tehran',
       '240,0'    : 'Asia/Dubai',
-      '240,1'    : 'Asia/Yerevan',
+      '240,1'    : 'Asia/Baku',
       '270,0'    : 'Asia/Kabul',
       '300,1'    : 'Asia/Yekaterinburg',
       '300,0'    : 'Asia/Karachi',
@@ -278,8 +276,6 @@
       'Asia/Damascus' : new Date(2011, 3, 1, 2, 0, 0, 0),
       'Asia/Jerusalem' : new Date(2011, 3, 1, 6, 0, 0, 0),
       'Africa/Cairo' : new Date(2010, 3, 30, 4, 0, 0, 0),
-      'Asia/Yerevan' : new Date(2011, 2, 27, 4, 0, 0, 0),
-      'Asia/Baku'    : new Date(2011, 2, 27, 8, 0, 0, 0),
       'Pacific/Auckland' : new Date(2011, 8, 26, 7, 0, 0, 0),
       'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0),
       'America/Halifax' : new Date(2011, 2, 13, 6, 0, 0, 0),
@@ -301,7 +297,6 @@
       'America/Santiago' : ['America/Santiago', 'America/Asuncion', 'America/Campo_Grande'],
       'America/Montevideo' : ['America/Montevideo', 'America/Sao_Paulo'],
       'Asia/Beirut' : ['Asia/Gaza', 'Asia/Beirut', 'Europe/Helsinki', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem', 'Africa/Cairo'],
-      'Asia/Yerevan' : ['Asia/Yerevan', 'Asia/Baku'],
       'Pacific/Auckland' : ['Pacific/Auckland', 'Pacific/Fiji'],
       'America/Los_Angeles' : ['America/Los_Angeles', 'America/Santa_Isabel'],
       'America/New_York' : ['America/Havana', 'America/New_York'],
