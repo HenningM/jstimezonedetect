@@ -13,7 +13,19 @@ Include `jstz.min.js` in your HTML document.
 Invoke the script by calling
 
     :::javascript
-        var tz = jstz.determine();
-        console.log(tz.name()); 
+        var tz = jstz.determine(); // Determines the time zone of the browser client
+        tz.name(); // Returns the name of the resulting time zone
 
-[1]: http://www.iana.org/time-zone
+## Use Case
+
+The script is useful if you do not want to disturb your user's with questions about what time zone they are in. You can rely on this script to give you a key that is usable for server side date time normalisations across time zones. 
+
+## Limitations
+
+This script does not do geo-location. So if you are unhappy with the time zone "Europe/Berlin" when the user is in fact in "Europe/Stockholm" - this script is not for you. Europe/Berlin and Europe/Stockholm are for nearly all scenarios completely identical, they both represent Central European Time.
+
+## Demo
+
+There is an updated demo running on: http://pellepim.bitbucket.org/jstz/.
+
+[1]: http://www.iana.org/time-zones
