@@ -72,6 +72,30 @@ timezones=( 'Pacific/Pago_Pago'
 			'Pacific/Apia'
 			'Pacific/Kiritimati')
 
+ambigous_zones=('America/Mazatlan'
+			    'America/Mexico_City'
+			    'America/Asuncion'
+			    'America/Campo_Grande'
+			    'America/Sao_Paulo'
+			    'Asia/Gaza'
+			    'Europe/Helsinki'
+			    'Europe/Istanbul'
+			    'Asia/Damascus'
+			    'Asia/Jerusalem'
+			    'Pacific/Fiji'
+			    'America/Santa_Isabel'
+			    'America/Havana'
+			    'America/Goose_Bay'
+			    'America/Miquelon'
+			    'Africa/Cairo'
+				'Europe/Moscow'
+			    'Asia/Yekaterinburg'
+			    'Asia/Omsk'
+			    'Asia/Krasnoyarsk'
+			    'Asia/Irkutsk'
+			    'Asia/Yakutsk'
+			    'Asia/Vladivostok')
+
 failure_count=0
 for tz in "${timezones[@]}"
 do
@@ -79,9 +103,19 @@ do
   test_result=$(node run.js)
   if [[ "$test_result" != "$tz" ]] 
   then
-    echo "Failure: $tz wrongly evaluates to $test_result!"
+    echo "Failure: $tz wrongly evaluates to $test_result."
     failure_count=$((failure_count + 1))
   fi
 done
 
+for tz in "${ambigous_zones[@]}"
+do
+  cp "/usr/share/zoneinfo/$tz" "/etc/localtime"
+  test_result=$(node run.js)
+  if [[ "$test_result" != "$tz" ]]
+  then
+  	echo "Failure: $tz wrongly evaluates to $test_result."
+  	failure_count=$((failure_count +1))
+  fi
+done
 echo "$failure_count failures"

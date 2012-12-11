@@ -255,34 +255,46 @@
    *
    * Each value is a date denoting when daylight savings starts for that timezone.
    */
-  jstz.olson.dst_start_dates = {
-      'America/Denver' : new Date(2011, 2, 13, 3, 0, 0, 0),
-      'America/Mazatlan' : new Date(2011, 3, 3, 3, 0, 0, 0),
-      'America/Chicago' : new Date(2011, 2, 13, 3, 0, 0, 0),
-      'America/Mexico_City' : new Date(2011, 3, 3, 3, 0, 0, 0),
-      'America/Asuncion' : new Date(2012, 10, 7, 3, 0, 0, 0),
-      'America/Santiago' : new Date(2012, 9, 3, 3, 0, 0, 0),
-      'America/Campo_Grande' : new Date(2011, 9, 16, 5, 0, 0, 0),
-      'America/Montevideo' : new Date(2011, 9, 2, 3, 0, 0, 0),
-      'America/Sao_Paulo' : new Date(2011, 9, 16, 5, 0, 0, 0),
-      'America/Los_Angeles' : new Date(2011, 2, 13, 8, 0, 0, 0),
-      'America/Santa_Isabel' : new Date(2011, 3, 5, 8, 0, 0, 0),
-      'America/Havana' : new Date(2011, 2, 13, 2, 0, 0, 0),
-      'America/New_York' : new Date(2011, 2, 13, 7, 0, 0, 0),
-      'Asia/Gaza' : new Date(2011, 2, 26, 23, 0, 0, 0),
-      'Asia/Beirut' : new Date(2011, 2, 27, 1, 0, 0, 0),
-      'Europe/Helsinki' : new Date(2011, 2, 27, 4, 0, 0, 0),
-      'Europe/Istanbul' : new Date(2011, 2, 28, 5, 0, 0, 0),
-      'Asia/Damascus' : new Date(2011, 3, 1, 2, 0, 0, 0),
-      'Asia/Jerusalem' : new Date(2011, 3, 1, 6, 0, 0, 0),
-      'Africa/Cairo' : new Date(2010, 3, 30, 4, 0, 0, 0),
-      'Pacific/Auckland' : new Date(2011, 8, 26, 7, 0, 0, 0),
-      'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0),
-      'America/Halifax' : new Date(2011, 2, 13, 6, 0, 0, 0),
-      'America/Goose_Bay' : new Date(2011, 2, 13, 2, 1, 0, 0),
-      'America/Miquelon' : new Date(2011, 2, 13, 5, 0, 0, 0),
-      'America/Godthab' : new Date(2011, 2, 27, 1, 0, 0, 0)
-  };
+  jstz.olson.dst_start_dates = (function () {
+    "use strict";
+    var ru_pre_dst_change = new Date(2010, 6, 15, 1, 0, 0, 0);
+
+    return {
+      'America/Denver':       new Date(2011, 2, 13, 3, 0, 0, 0),
+      'America/Mazatlan':     new Date(2011, 3, 3, 3, 0, 0, 0),
+      'America/Chicago':      new Date(2011, 2, 13, 3, 0, 0, 0),
+      'America/Mexico_City':  new Date(2011, 3, 3, 3, 0, 0, 0),
+      'America/Asuncion':     new Date(2012, 9, 7, 3, 0, 0, 0),
+      'America/Santiago':     new Date(2012, 9, 3, 3, 0, 0, 0),
+      'America/Campo_Grande': new Date(2012, 9, 21, 5, 0, 0, 0),
+      'America/Montevideo':   new Date(2011, 9, 2, 3, 0, 0, 0),
+      'America/Sao_Paulo':    new Date(2011, 9, 16, 5, 0, 0, 0),
+      'America/Los_Angeles':  new Date(2011, 2, 13, 8, 0, 0, 0),
+      'America/Santa_Isabel': new Date(2011, 3, 5, 8, 0, 0, 0),
+      'America/Havana':       new Date(2012, 2, 10, 2, 0, 0, 0),
+      'America/New_York':     new Date(2012, 2, 10, 7, 0, 0, 0),
+      'Asia/Beirut':          new Date(2011, 2, 27, 1, 0, 0, 0),
+      'Europe/Helsinki':      new Date(2011, 2, 27, 4, 0, 0, 0),
+      'Europe/Istanbul':      new Date(2011, 2, 28, 5, 0, 0, 0),
+      'Asia/Damascus':        new Date(2011, 3, 1, 2, 0, 0, 0),
+      'Asia/Jerusalem':       new Date(2011, 3, 1, 6, 0, 0, 0),
+      'Asia/Gaza':            new Date(2009, 2, 28, 0, 30, 0, 0),
+      'Africa/Cairo':         new Date(2009, 3, 25, 0, 30, 0, 0),
+      'Pacific/Auckland':     new Date(2011, 8, 26, 7, 0, 0, 0),
+      'Pacific/Fiji':         new Date(2010, 11, 29, 23, 0, 0, 0),
+      'America/Halifax':      new Date(2011, 2, 13, 6, 0, 0, 0),
+      'America/Goose_Bay':    new Date(2011, 2, 13, 2, 1, 0, 0),
+      'America/Miquelon':     new Date(2011, 2, 13, 5, 0, 0, 0),
+      'America/Godthab':      new Date(2011, 2, 27, 1, 0, 0, 0),
+      'Europe/Moscow':        ru_pre_dst_change,
+      'Asia/Yekaterinburg':   ru_pre_dst_change,
+      'Asia/Omsk':            ru_pre_dst_change,
+      'Asia/Krasnoyarsk':     ru_pre_dst_change,
+      'Asia/Irkutsk':         ru_pre_dst_change,
+      'Asia/Yakutsk':         ru_pre_dst_change,
+      'Asia/Vladivostok':     ru_pre_dst_change
+    };
+  }());
 
   /**
    * The keys in this object are timezones that we know may be ambiguous after
@@ -290,18 +302,28 @@
    *
    * The array of timezones to compare must be in the order that daylight savings
    * starts for the regions.
+   * 
+   * @TODO: Once 2013 is upon us, remove Asia/Gaza from the Beirut ambiguity list
    */
   jstz.olson.ambiguity_list = {
-      'America/Denver' : ['America/Denver', 'America/Mazatlan'],
-      'America/Chicago' : ['America/Chicago', 'America/Mexico_City'],
-      'America/Santiago' : ['America/Santiago', 'America/Asuncion', 'America/Campo_Grande'],
-      'America/Montevideo' : ['America/Montevideo', 'America/Sao_Paulo'],
-      'Asia/Beirut' : ['Asia/Gaza', 'Asia/Beirut', 'Europe/Helsinki', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem', 'Africa/Cairo'],
-      'Pacific/Auckland' : ['Pacific/Auckland', 'Pacific/Fiji'],
-      'America/Los_Angeles' : ['America/Los_Angeles', 'America/Santa_Isabel'],
-      'America/New_York' : ['America/Havana', 'America/New_York'],
-      'America/Halifax' : ['America/Goose_Bay', 'America/Halifax'],
-      'America/Godthab' : ['America/Miquelon', 'America/Godthab']
+      'America/Denver':       ['America/Denver', 'America/Mazatlan'],
+      'America/Chicago':      ['America/Chicago', 'America/Mexico_City'],
+      'America/Santiago':     ['America/Santiago', 'America/Asuncion', 'America/Campo_Grande'],
+      'America/Montevideo':   ['America/Montevideo', 'America/Sao_Paulo'],
+      'Asia/Beirut':          ['Asia/Beirut', 'Europe/Helsinki', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem', 'Asia/Gaza'],
+      'Pacific/Auckland':     ['Pacific/Auckland', 'Pacific/Fiji'],
+      'America/Los_Angeles':  ['America/Los_Angeles', 'America/Santa_Isabel'],
+      'America/New_York':     ['America/Havana', 'America/New_York'],
+      'America/Halifax':      ['America/Goose_Bay', 'America/Halifax'],
+      'America/Godthab':      ['America/Miquelon', 'America/Godthab'],
+      'Asia/Dubai':           ['Europe/Moscow'],
+      'Asia/Dhaka':           ['Asia/Yekaterinburg'],
+      'Asia/Jakarta':         ['Asia/Omsk'],
+      'Asia/Shanghai':        ['Asia/Krasnoyarsk'],
+      'Asia/Tokyo':           ['Asia/Irkutsk'],
+      'Australia/Brisbane':   ['Asia/Yakutsk'],
+      'Pacific/Noumea':       ['Asia/Vladivostok'],
+      'Africa/Johannesburg':  ['Asia/Gaza', 'Africa/Cairo']
   };
 
   if (typeof exports !== 'undefined') {
