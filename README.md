@@ -36,7 +36,7 @@ Thanks to
   
   - [Josh Fraser][5] for the original idea
   - [Brian Donovan][6] for making jstz CommonJS compliant
-  _ [Ilya Sedlovsky][7] for help with namespacing
+  - [Ilya Sedlovsky][7] for help with namespacing
 
 Other contributors:
 [Gilmore Davidson][8]
