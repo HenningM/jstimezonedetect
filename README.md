@@ -32,9 +32,9 @@ If you want to contribute to the project (perhaps fix a bug, or reflect a change
 
 ## Credits
 Thanks to 
-* [Josh Fraser][5] for the original idea
-* [Brian Donovan][6] for making jstz CommonJS compliant
-* [Ilya Sedlovsky][7] for help with namespacing
+ - [Josh Fraser][5] for the original idea
+ - [Brian Donovan][6] for making jstz CommonJS compliant
+ - [Ilya Sedlovsky][7] for help with namespacing
 
 Other contributors:
 [Gilmore Davidson][8]
