@@ -12,7 +12,7 @@ Invoke the script by calling
 
     :::javascript
         var tz = jstz.determine(); // Determines the time zone of the browser client
-        tz.name(); // Returns the name of the resulting time zone
+        tz.name(); // Returns the name of the time zone eg "Europe/Berlin"
 
 ## Use Case
 
