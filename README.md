@@ -1,5 +1,3 @@
-# jsTimezoneDetect (jstz)
-
 ## Introduction
 
 This is a small unintrusive JavaScript library that helps with detecting the [IANA zone info key][1] representing the time zone of a browser client.
@@ -8,7 +6,7 @@ The IANA timezone database is pretty much standard for most platforms (UNIX and 
 
 ## Example Use
 
-Include `jstz.min.js` in your HTML document. 
+There is a [minified version in the repo][3] called `jstz.min.js`. Include it in your HTML document.
 
 Invoke the script by calling
 
@@ -30,3 +28,4 @@ There is an updated demo running on: [http://pellepim.bitbucket.org/jstz/][2].
 
 [1]: http://www.iana.org/time-zones
 [2]: http://pellepim.bitbucket.org/jstz/
+[3]: https://bitbucket.org/pellepim/jstimezonedetect/src
