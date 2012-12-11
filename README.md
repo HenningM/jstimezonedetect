@@ -26,6 +26,7 @@ This script does not do geo-location. So if you are unhappy with the time zone "
 
 ## Demo
 
-There is an updated demo running on: http://pellepim.bitbucket.org/jstz/.
+There is an updated demo running on: [http://pellepim.bitbucket.org/jstz/][2].
 
 [1]: http://www.iana.org/time-zones
+[2]: http://pellepim.bitbucket.org/jstz/
