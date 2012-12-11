@@ -30,7 +30,20 @@ There is an updated demo running on: [http://pellepim.bitbucket.org/jstz/][2].
 
 If you want to contribute to the project (perhaps fix a bug, or reflect a change in time zone rules), please simply issue a Pull Request. Don't worry about [Grunt][4] builds etc, all you need to modify is the jstz.js file and I'll take care of the testing/minifying etc.
 
+## Credits
+Thanks to 
+* [Josh Fraser][5] for the original idea
+* [Brian Donovan][6] for making jstz CommonJS compliant
+* [Ilya Sedlovsky][7] for help with namespacing
+
+Other contributors:
+[Gilmore Davidson][8]
+
 [1]: http://www.iana.org/time-zones
 [2]: http://pellepim.bitbucket.org/jstz/
 [3]: https://bitbucket.org/pellepim/jstimezonedetect/src
 [4]: https://github.com/gruntjs/grunt
+[5]: http://www.onlineaspect.com/about/
+[6]: https://bitbucket.org/eventualbuddha
+[7]: https://bitbucket.org/purebill
+[8]: https://bitbucket.org/gdavidson
