@@ -26,6 +26,11 @@ This script does not do geo-location. So if you are unhappy with the time zone "
 
 There is an updated demo running on: [http://pellepim.bitbucket.org/jstz/][2].
 
+## Contribute?
+
+If you want to contribute to the project (perhaps fix a bug, or reflect a change in time zone rules), please simply issue a Pull Request. Don't worry about [Grunt][4] builds etc, all you need to modify is the jstz.js file and I'll take care of the testing/minifying etc.
+
 [1]: http://www.iana.org/time-zones
 [2]: http://pellepim.bitbucket.org/jstz/
 [3]: https://bitbucket.org/pellepim/jstimezonedetect/src
+[4]: https://github.com/gruntjs/grunt
