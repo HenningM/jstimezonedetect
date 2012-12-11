@@ -1,7 +1,5 @@
 /*jslint undef: true */
-/*global console*/
-/*global exports*/
-/*version 2012-05-10*/
+/*global console, exports*/
 
 (function(root) {
   /**
@@ -21,12 +19,20 @@
               return (offset !== null ? offset : 0);
           },
 
+          get_date = function (month, date) {
+              var d = new Date();
+              d.setDate(date);
+              d.setMonth(month);
+              return d;
+          },
+
           get_january_offset = function () {
-              return get_date_offset(new Date(2010, 0, 1, 0, 0, 0, 0));
+              
+              return get_date_offset(get_date(0,2));
           },
 
           get_june_offset = function () {
-              return get_date_offset(new Date(2010, 5, 1, 0, 0, 0, 0));
+              return get_date_offset(get_date(5,2));
           },
 
           /**
@@ -184,12 +190,12 @@
       '-270,0'   : 'America/Caracas',
       '-240,1'   : 'America/Halifax',
       '-240,0'   : 'America/Santo_Domingo',
-      '-240,1,s' : 'America/Asuncion',
+      '-240,1,s' : 'America/Santiago',
       '-210,1'   : 'America/St_Johns',
       '-180,1'   : 'America/Godthab',
       '-180,0'   : 'America/Argentina/Buenos_Aires',
       '-180,1,s' : 'America/Montevideo',
-      '-120,0'   : 'America/Noronha',
+      '-120,0'   : 'Etc/GMT+2',
       '-120,1'   : 'Etc/GMT+2',
       '-60,1'    : 'Atlantic/Azores',
       '-60,0'    : 'Atlantic/Cape_Verde',
@@ -200,11 +206,11 @@
       '60,1,s'   : 'Africa/Windhoek',
       '120,1'    : 'Asia/Beirut',
       '120,0'    : 'Africa/Johannesburg',
-      '180,1'    : 'Europe/Moscow',
       '180,0'    : 'Asia/Baghdad',
+      '180,1'    : 'Europe/Moscow',
       '210,1'    : 'Asia/Tehran',
       '240,0'    : 'Asia/Dubai',
-      '240,1'    : 'Asia/Yerevan',
+      '240,1'    : 'Asia/Baku',
       '270,0'    : 'Asia/Kabul',
       '300,1'    : 'Asia/Yekaterinburg',
       '300,0'    : 'Asia/Karachi',
@@ -254,9 +260,8 @@
       'America/Mazatlan' : new Date(2011, 3, 3, 3, 0, 0, 0),
       'America/Chicago' : new Date(2011, 2, 13, 3, 0, 0, 0),
       'America/Mexico_City' : new Date(2011, 3, 3, 3, 0, 0, 0),
-      'Atlantic/Stanley' : new Date(2011, 8, 4, 7, 0, 0, 0),
-      'America/Asuncion' : new Date(2011, 9, 2, 3, 0, 0, 0),
-      'America/Santiago' : new Date(2011, 9, 9, 3, 0, 0, 0),
+      'America/Asuncion' : new Date(2012, 10, 7, 3, 0, 0, 0),
+      'America/Santiago' : new Date(2012, 9, 3, 3, 0, 0, 0),
       'America/Campo_Grande' : new Date(2011, 9, 16, 5, 0, 0, 0),
       'America/Montevideo' : new Date(2011, 9, 2, 3, 0, 0, 0),
       'America/Sao_Paulo' : new Date(2011, 9, 16, 5, 0, 0, 0),
@@ -266,14 +271,11 @@
       'America/New_York' : new Date(2011, 2, 13, 7, 0, 0, 0),
       'Asia/Gaza' : new Date(2011, 2, 26, 23, 0, 0, 0),
       'Asia/Beirut' : new Date(2011, 2, 27, 1, 0, 0, 0),
-      'Europe/Minsk' : new Date(2011, 2, 27, 2, 0, 0, 0),
       'Europe/Helsinki' : new Date(2011, 2, 27, 4, 0, 0, 0),
       'Europe/Istanbul' : new Date(2011, 2, 28, 5, 0, 0, 0),
       'Asia/Damascus' : new Date(2011, 3, 1, 2, 0, 0, 0),
       'Asia/Jerusalem' : new Date(2011, 3, 1, 6, 0, 0, 0),
       'Africa/Cairo' : new Date(2010, 3, 30, 4, 0, 0, 0),
-      'Asia/Yerevan' : new Date(2011, 2, 27, 4, 0, 0, 0),
-      'Asia/Baku'    : new Date(2011, 2, 27, 8, 0, 0, 0),
       'Pacific/Auckland' : new Date(2011, 8, 26, 7, 0, 0, 0),
       'Pacific/Fiji' : new Date(2010, 11, 29, 23, 0, 0, 0),
       'America/Halifax' : new Date(2011, 2, 13, 6, 0, 0, 0),
@@ -292,10 +294,9 @@
   jstz.olson.ambiguity_list = {
       'America/Denver' : ['America/Denver', 'America/Mazatlan'],
       'America/Chicago' : ['America/Chicago', 'America/Mexico_City'],
-      'America/Asuncion' : ['Atlantic/Stanley', 'America/Asuncion', 'America/Santiago', 'America/Campo_Grande'],
+      'America/Santiago' : ['America/Santiago', 'America/Asuncion', 'America/Campo_Grande'],
       'America/Montevideo' : ['America/Montevideo', 'America/Sao_Paulo'],
-      'Asia/Beirut' : ['Asia/Gaza', 'Asia/Beirut', 'Europe/Minsk', 'Europe/Helsinki', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem', 'Africa/Cairo'],
-      'Asia/Yerevan' : ['Asia/Yerevan', 'Asia/Baku'],
+      'Asia/Beirut' : ['Asia/Gaza', 'Asia/Beirut', 'Europe/Helsinki', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem', 'Africa/Cairo'],
       'Pacific/Auckland' : ['Pacific/Auckland', 'Pacific/Fiji'],
       'America/Los_Angeles' : ['America/Los_Angeles', 'America/Santa_Isabel'],
       'America/New_York' : ['America/Havana', 'America/New_York'],
