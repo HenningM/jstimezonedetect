@@ -1,6 +1,8 @@
 ## Introduction
 
-This is a small unintrusive JavaScript library that helps with detecting the [IANA zone info key][1] representing the time zone of a browser client.
+This script gives you the zone info key representing your device's time zone setting. 
+
+The return value is an [IANA zone info key][1] (aka the Olson time zone database).
 
 The IANA timezone database is pretty much standard for most platforms (UNIX and Mac support it natively, and every programming language in the world either has native support or well maintained libraries that support it).
 
@@ -16,11 +18,17 @@ Invoke the script by calling
 
 ## Use Case
 
-The script is useful if you do not want to disturb your user's with questions about what time zone they are in. You can rely on this script to give you a key that is usable for server side date time normalisations across time zones. 
+The script is useful if you do not want to disturb your users with questions about what time zone they are in. You can rely on this script to give you a key that is usable for server side datetime normalisations across time zones. 
 
 ## Limitations
 
-This script does not do geo-location. So if you are unhappy with the time zone "Europe/Berlin" when the user is in fact in "Europe/Stockholm" - this script is not for you. Europe/Berlin and Europe/Stockholm are for nearly all scenarios completely identical, they both represent Central European Time.
+This script does not do geo-location, nor does it care very much about historical time zones. 
+
+So if you are unhappy with the time zone "Europe/Berlin" when the user is in fact in "Europe/Stockholm" - this script is not for you. (They are both identical in modern time).
+
+Also, if it is important to you to know that in Europe/Simferopool (Ukraine) the UTC offset before 1924 was +2.67, sorry, this script will not help you.
+
+Time zones are a screwed up thing, generally speaking, and the scope of this script is to solve problems concerning modern time zones, in this case from 2010 and forward.
 
 ## Demo
 
