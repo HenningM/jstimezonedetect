@@ -292,7 +292,8 @@
       'Asia/Irkutsk':         ru_pre_dst_change,
       'Asia/Yakutsk':         ru_pre_dst_change,
       'Asia/Vladivostok':     ru_pre_dst_change,
-      'Asia/Kamchatka':       ru_pre_dst_change
+      'Asia/Kamchatka':       ru_pre_dst_change,
+      'Europe/Minsk':         ru_pre_dst_change
     };
   }());
 
@@ -324,7 +325,8 @@
       'Australia/Brisbane':   ['Asia/Yakutsk'],
       'Pacific/Noumea':       ['Asia/Vladivostok'],
       'Pacific/Tarawa':       ['Asia/Kamchatka'],
-      'Africa/Johannesburg':  ['Asia/Gaza', 'Africa/Cairo']
+      'Africa/Johannesburg':  ['Asia/Gaza', 'Africa/Cairo'],
+      'Asia/Baghdad':         ['Europe/Minsk']
   };
 
   if (typeof exports !== 'undefined') {
