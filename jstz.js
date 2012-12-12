@@ -30,7 +30,6 @@
           },
 
           get_january_offset = function (year) {
-              
               return get_date_offset(get_date(year, 0 ,2));
           },
 
@@ -256,7 +255,7 @@
    */
   jstz.olson.dst_start_dates = (function () {
     "use strict";
-    var ru_pre_dst_change = new Date(2008, 6, 15, 1, 0, 0, 0);
+    var ru_pre_dst_change = new Date(2010, 6, 15, 1, 0, 0, 0);
 
     return {
       'America/Denver':       new Date(2011, 2, 13, 3, 0, 0, 0),
@@ -293,7 +292,8 @@
       'Asia/Yakutsk':         ru_pre_dst_change,
       'Asia/Vladivostok':     ru_pre_dst_change,
       'Asia/Kamchatka':       ru_pre_dst_change,
-      'Europe/Minsk':         ru_pre_dst_change
+      'Europe/Minsk':         ru_pre_dst_change,
+      'Australia/Perth':      new Date(2008, 10, 1, 1, 0, 0, 0)
     };
   }());
 
@@ -320,7 +320,7 @@
       'Asia/Dubai':           ['Europe/Moscow'],
       'Asia/Dhaka':           ['Asia/Yekaterinburg'],
       'Asia/Jakarta':         ['Asia/Omsk'],
-      'Asia/Shanghai':        ['Asia/Krasnoyarsk'],
+      'Asia/Shanghai':        ['Asia/Krasnoyarsk', 'Australia/Perth'],
       'Asia/Tokyo':           ['Asia/Irkutsk'],
       'Australia/Brisbane':   ['Asia/Yakutsk'],
       'Pacific/Noumea':       ['Asia/Vladivostok'],
