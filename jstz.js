@@ -19,34 +19,39 @@
               return (offset !== null ? offset : 0);
           },
 
-          get_date = function (month, date) {
+          get_date = function (year, month, date) {
               var d = new Date();
+              if (year !== undefined) {
+                d.setFullYear(year);
+              }
               d.setDate(date);
               d.setMonth(month);
               return d;
           },
 
-          get_january_offset = function () {
+          get_january_offset = function (year) {
               
-              return get_date_offset(get_date(0,2));
+              return get_date_offset(get_date(year, 0 ,2));
           },
 
-          get_june_offset = function () {
-              return get_date_offset(get_date(5,2));
+          get_june_offset = function (year) {
+
+              return get_date_offset(get_date(year, 5, 2));
           },
 
           /**
            * Private method.
            * Checks whether a given date is in daylight savings time.
-           * If the date supplied is after june, we assume that we're checking
+           * If the date supplied is after august, we assume that we're checking
            * for southern hemisphere DST.
            * @param {Date} date
            * @returns {Boolean}
            */
           date_is_dst = function (date) {
-              var base_offset = ((date.getMonth() > 5 ? get_june_offset()
-                                                  : get_january_offset())),
+              var base_offset = ((date.getMonth() > 7 ? get_june_offset(date.getFullYear())
+                                                  : get_january_offset(date.getFullYear()))),
                   date_offset = get_date_offset(date);
+
 
               return (base_offset - date_offset) !== 0;
           },
@@ -88,12 +93,6 @@
           };
 
       return {
-          determine_timezone : function () {
-              if (typeof console !== 'undefined') {
-                  console.log("jstz.determine_timezone() is deprecated and will be removed in an upcoming version. Please use jstz.determine() instead.");
-              }
-              return determine();
-          },
           determine: determine,
           date_is_dst : date_is_dst
       };
@@ -257,7 +256,7 @@
    */
   jstz.olson.dst_start_dates = (function () {
     "use strict";
-    var ru_pre_dst_change = new Date(2010, 6, 15, 1, 0, 0, 0);
+    var ru_pre_dst_change = new Date(2008, 6, 15, 1, 0, 0, 0);
 
     return {
       'America/Denver':       new Date(2011, 2, 13, 3, 0, 0, 0),
@@ -292,7 +291,8 @@
       'Asia/Krasnoyarsk':     ru_pre_dst_change,
       'Asia/Irkutsk':         ru_pre_dst_change,
       'Asia/Yakutsk':         ru_pre_dst_change,
-      'Asia/Vladivostok':     ru_pre_dst_change
+      'Asia/Vladivostok':     ru_pre_dst_change,
+      'Asia/Kamchatka':       ru_pre_dst_change
     };
   }());
 
@@ -323,6 +323,7 @@
       'Asia/Tokyo':           ['Asia/Irkutsk'],
       'Australia/Brisbane':   ['Asia/Yakutsk'],
       'Pacific/Noumea':       ['Asia/Vladivostok'],
+      'Pacific/Tarawa':       ['Asia/Kamchatka'],
       'Africa/Johannesburg':  ['Asia/Gaza', 'Africa/Cairo']
   };
 

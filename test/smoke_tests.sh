@@ -94,7 +94,8 @@ ambigous_zones=('America/Mazatlan'
 			    'Asia/Krasnoyarsk'
 			    'Asia/Irkutsk'
 			    'Asia/Yakutsk'
-			    'Asia/Vladivostok')
+			    'Asia/Vladivostok'
+			    'Asia/Kamchatka')
 
 failure_count=0
 for tz in "${timezones[@]}"
