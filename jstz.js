@@ -7,7 +7,7 @@
  * @license MIT License - http://www.opensource.org/licenses/mit-license.php
  *
  * For usage and examples, visit:
- * http://http://pellepim.bitbucket.org/jstz/
+ * http://pellepim.bitbucket.org/jstz/
  *
  * Copyright (c) Jon Nylander
  */
