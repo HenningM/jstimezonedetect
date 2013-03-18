@@ -8,7 +8,7 @@ The IANA timezone database is pretty much standard for most platforms (UNIX and 
 
 ## Example Use
 
-There is a [minified version in the repo][3] called `jstz.min.js`. Include it in your HTML document.
+Since version 1.0.4 the library is [hosted on http://cdnjs.com/][10]. I strongly recommend including it from there.
 
 Invoke the script by calling
 
@@ -59,3 +59,4 @@ Other contributors:
 [7]: https://bitbucket.org/purebill
 [8]: https://bitbucket.org/gdavidson
 [9]: https://github.com/JordanMagnuson
+[10]: http://cdnjs.com
