@@ -2,7 +2,7 @@
  * This script gives you the zone info key representing your device's time zone setting.
  *
  * @name jsTimezoneDetect
- * @version 1.0.4
+ * @version 1.0.5
  * @author Jon Nylander
  * @license MIT License - http://www.opensource.org/licenses/mit-license.php
  *
@@ -267,7 +267,7 @@
    * jstz.determine_timezone();
    */
   jstz.olson.timezones = {
-      '-720,0'   : 'Etc/GMT+12',
+      '-720,0'   : 'Pacific/Majuro',
       '-660,0'   : 'Pacific/Pago_Pago',
       '-600,1'   : 'America/Adak',
       '-600,0'   : 'Pacific/Honolulu',
@@ -291,11 +291,11 @@
       '-180,1'   : 'America/Godthab',
       '-180,0'   : 'America/Argentina/Buenos_Aires',
       '-180,1,s' : 'America/Montevideo',
-      '-120,0'   : 'Etc/GMT+2',
-      '-120,1'   : 'Etc/GMT+2',
+      '-120,0'   : 'America/Noronha',
+      '-120,1'   : 'America/Noronha',
       '-60,1'    : 'Atlantic/Azores',
       '-60,0'    : 'Atlantic/Cape_Verde',
-      '0,0'      : 'Etc/UTC',
+      '0,0'      : 'UTC',
       '0,1'      : 'Europe/London',
       '60,1'     : 'Europe/Berlin',
       '60,0'     : 'Africa/Lagos',
