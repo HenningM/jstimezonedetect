@@ -8,7 +8,7 @@ The IANA timezone database is pretty much standard for most platforms (UNIX and 
 
 ## Example Use
 
-Since version 1.0.4 the library is [hosted on cdnjs.com/][10]. I strongly recommend including it from there.
+Since version 1.0.4 the [library is hosted on cdnjs.com][10]. I strongly recommend including it from there.
 
 Invoke the script by calling
 
