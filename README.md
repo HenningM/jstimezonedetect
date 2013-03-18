@@ -45,6 +45,7 @@ Thanks to
   - [Josh Fraser][5] for the original idea
   - [Brian Donovan][6] for making jstz CommonJS compliant
   - [Ilya Sedlovsky][7] for help with namespacing
+  - [Jordan Magnuson][9] for adding to cdnjs, documentation tags, and for reporting important issues
 
 Other contributors:
 [Gilmore Davidson][8]
@@ -57,3 +58,4 @@ Other contributors:
 [6]: https://bitbucket.org/eventualbuddha
 [7]: https://bitbucket.org/purebill
 [8]: https://bitbucket.org/gdavidson
+[9]: https://github.com/JordanMagnuson
