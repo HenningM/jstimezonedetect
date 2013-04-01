@@ -137,30 +137,31 @@
                     'America/Santa_Isabel': new Date(2011, 3, 5, 8, 0, 0, 0),
                     'America/Havana':       new Date(2012, 2, 10, 2, 0, 0, 0),
                     'America/New_York':     new Date(2012, 2, 10, 7, 0, 0, 0),
-                    'Asia/Beirut':          new Date(2011, 2, 27, 1, 0, 0, 0),
-                    'Europe/Helsinki':      new Date(2011, 2, 27, 4, 0, 0, 0),
-                    'Europe/Istanbul':      new Date(2011, 2, 28, 5, 0, 0, 0),
-                    'Asia/Damascus':        new Date(2011, 3, 1, 2, 0, 0, 0),
-                    'Asia/Jerusalem':       new Date(2011, 3, 1, 6, 0, 0, 0),
-                    'Asia/Gaza':            new Date(2009, 2, 28, 0, 30, 0, 0),
-                    'Africa/Cairo':         new Date(2009, 3, 25, 0, 30, 0, 0),
+                    'Europe/Helsinki':      new Date(2013, 2, 31, 5, 0, 0, 0),
                     'Pacific/Auckland':     new Date(2011, 8, 26, 7, 0, 0, 0),
                     'Pacific/Fiji':         new Date(2010, 10, 29, 23, 0, 0, 0),
                     'America/Halifax':      new Date(2011, 2, 13, 6, 0, 0, 0),
                     'America/Goose_Bay':    new Date(2011, 2, 13, 2, 1, 0, 0),
                     'America/Miquelon':     new Date(2011, 2, 13, 5, 0, 0, 0),
                     'America/Godthab':      new Date(2011, 2, 27, 1, 0, 0, 0),
-                    'Europe/Moscow':        ru_pre_dst_change,
-                    'Asia/Yekaterinburg':   ru_pre_dst_change,
-                    'Asia/Omsk':            ru_pre_dst_change,
-                    'Asia/Krasnoyarsk':     ru_pre_dst_change,
-                    'Asia/Irkutsk':         ru_pre_dst_change,
-                    'Asia/Yakutsk':         ru_pre_dst_change,
-                    'Asia/Vladivostok':     ru_pre_dst_change,
-                    'Asia/Kamchatka':       ru_pre_dst_change,
-                    'Europe/Minsk':         ru_pre_dst_change,
-                    'Pacific/Apia':         new Date(2010, 10, 1, 1, 0, 0, 0),
-                    'Australia/Perth':      new Date(2008, 10, 1, 1, 0, 0, 0)
+                    'Europe/Moscow': ru_pre_dst_change,
+                    'Asia/Amman': new Date(2013, 2, 29, 1, 0, 0, 0),
+                    'Asia/Beirut': new Date(2013, 2, 31, 2, 0, 0, 0),
+                    'Asia/Damascus': new Date(2013, 3, 6, 2, 0, 0, 0),
+                    'Asia/Jerusalem': new Date(2013, 2, 29, 5, 0, 0, 0),
+                    'Asia/Nicosia': new Date(2013, 2, 31, 3, 1, 0, 0),
+                    'Asia/Yekaterinburg': ru_pre_dst_change,
+                    'Asia/Omsk': ru_pre_dst_change,
+                    'Asia/Krasnoyarsk': ru_pre_dst_change,
+                    'Asia/Irkutsk': ru_pre_dst_change,
+                    'Asia/Yakutsk': ru_pre_dst_change,
+                    'Asia/Vladivostok': ru_pre_dst_change,
+                    'Asia/Baku': new Date(2013, 2, 31, 4, 0, 0),
+                    'Asia/Yerevan': new Date(2013, 2, 31, 3, 0, 0),
+                    'Asia/Kamchatka': ru_pre_dst_change,
+                    'Europe/Minsk': ru_pre_dst_change,
+                    'Pacific/Apia': new Date(2010, 10, 1, 1, 0, 0, 0),
+                    'Australia/Perth': new Date(2008, 10, 1, 1, 0, 0, 0)
                 };
 
               return dst_starts[tz_name];
@@ -184,16 +185,13 @@
          *
          * The array of timezones to compare must be in the order that daylight savings
          * starts for the regions.
-         * 
-         * @TODO: Once 2013 is upon us, remove Asia/Gaza from the Beirut ambiguity list,
-         * by then it should suffice that it lives in the Africa/Johannesburg check.
          */
       var AMBIGUITIES = {
               'America/Denver':       ['America/Denver', 'America/Mazatlan'],
               'America/Chicago':      ['America/Chicago', 'America/Mexico_City'],
               'America/Santiago':     ['America/Santiago', 'America/Asuncion', 'America/Campo_Grande'],
               'America/Montevideo':   ['America/Montevideo', 'America/Sao_Paulo'],
-              'Asia/Beirut':          ['Asia/Beirut', 'Europe/Helsinki', 'Europe/Istanbul', 'Asia/Damascus', 'Asia/Jerusalem', 'Asia/Gaza'],
+              'Asia/Beirut':          ['Asia/Amman', 'Asia/Jerusalem', 'Asia/Beirut', 'Asia/Nicosia', 'Europe/Helsinki','Asia/Damascus'],
               'Pacific/Auckland':     ['Pacific/Auckland', 'Pacific/Fiji'],
               'America/Los_Angeles':  ['America/Los_Angeles', 'America/Santa_Isabel'],
               'America/New_York':     ['America/Havana', 'America/New_York'],
@@ -207,9 +205,9 @@
               'Australia/Brisbane':   ['Asia/Yakutsk'],
               'Pacific/Noumea':       ['Asia/Vladivostok'],
               'Pacific/Tarawa':       ['Asia/Kamchatka'],
-              'Pacific/Tongatapu':    ['Pacific/Apia'],   
-              'Africa/Johannesburg':  ['Asia/Gaza', 'Africa/Cairo'],
-              'Asia/Baghdad':         ['Europe/Minsk']
+              'Pacific/Tongatapu':    ['Pacific/Apia'],
+              'Asia/Baghdad':         ['Europe/Minsk'],
+              'Asia/Baku':            ['Asia/Yerevan','Asia/Baku']
           },
 
           timezone_name = tz_name,
