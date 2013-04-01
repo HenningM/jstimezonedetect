@@ -23,8 +23,6 @@
       'use strict';
       var HEMISPHERE_SOUTH = 's',
           
-          /* This is the year used to do primary checkups */
-          REFERENCE_YEAR = 2011,
           /**
            * Gets the offset in minutes from UTC for a certain date.
            * @param {Date} date
@@ -40,8 +38,8 @@
               if (year !== undefined) {
                 d.setFullYear(year);
               }
-              d.setDate(date);
               d.setMonth(month);
+              d.setDate(date);
               return d;
           },
 
@@ -50,25 +48,30 @@
           },
 
           get_june_offset = function (year) {
-
               return get_date_offset(get_date(year, 5, 2));
           },
 
           /**
            * Private method.
-           * Checks whether a given date is in daylight savings time.
+           * Checks whether a given date is in daylight saving time.
            * If the date supplied is after august, we assume that we're checking
            * for southern hemisphere DST.
            * @param {Date} date
            * @returns {Boolean}
            */
           date_is_dst = function (date) {
-              var base_offset = ((date.getMonth() > 7 ? get_june_offset(date.getFullYear())
-                                                  : get_january_offset(date.getFullYear()))),
-                  date_offset = get_date_offset(date);
+              var is_southern = date.getMonth() > 7,
+                  base_offset = is_southern ? get_june_offset(date.getFullYear()) : 
+                                              get_january_offset(date.getFullYear()),
+                  date_offset = get_date_offset(date),
+                  is_west = base_offset < 0,
+                  dst_offset = base_offset - date_offset;
+                  
+              if (!is_west && !is_southern) {
+                  return dst_offset < 0;
+              }
 
-
-              return (base_offset - date_offset) !== 0;
+              return dst_offset !== 0;
           },
 
           /**
@@ -84,8 +87,8 @@
            */
 
           lookup_key = function () {
-              var january_offset = get_january_offset(REFERENCE_YEAR),
-                  june_offset = get_june_offset(REFERENCE_YEAR),
+              var january_offset = get_january_offset(),
+                  june_offset = get_june_offset(),
                   diff = january_offset - june_offset;
 
               if (diff < 0) {
@@ -124,32 +127,30 @@
 
             var ru_pre_dst_change = new Date(2010, 6, 15, 1, 0, 0, 0), // In 2010 Russia had DST, this allows us to detect Russia :)
                 dst_starts = {
-                    'America/Denver':       new Date(2011, 2, 13, 3, 0, 0, 0),
-                    'America/Mazatlan':     new Date(2011, 3, 3, 3, 0, 0, 0),
-                    'America/Chicago':      new Date(2011, 2, 13, 3, 0, 0, 0),
-                    'America/Mexico_City':  new Date(2011, 3, 3, 3, 0, 0, 0),
-                    'America/Asuncion':     new Date(2012, 9, 7, 3, 0, 0, 0),
-                    'America/Santiago':     new Date(2012, 9, 3, 3, 0, 0, 0),
+                    'America/Denver': new Date(2011, 2, 13, 3, 0, 0, 0),
+                    'America/Mazatlan': new Date(2011, 3, 3, 3, 0, 0, 0),
+                    'America/Chicago': new Date(2011, 2, 13, 3, 0, 0, 0),
+                    'America/Mexico_City': new Date(2011, 3, 3, 3, 0, 0, 0),
+                    'America/Asuncion': new Date(2012, 9, 7, 3, 0, 0, 0),
+                    'America/Santiago': new Date(2012, 9, 3, 3, 0, 0, 0),
                     'America/Campo_Grande': new Date(2012, 9, 21, 5, 0, 0, 0),
-                    'America/Montevideo':   new Date(2011, 9, 2, 3, 0, 0, 0),
-                    'America/Sao_Paulo':    new Date(2011, 9, 16, 5, 0, 0, 0),
-                    'America/Los_Angeles':  new Date(2011, 2, 13, 8, 0, 0, 0),
+                    'America/Montevideo': new Date(2011, 9, 2, 3, 0, 0, 0),
+                    'America/Sao_Paulo': new Date(2011, 9, 16, 5, 0, 0, 0),
+                    'America/Los_Angeles': new Date(2011, 2, 13, 8, 0, 0, 0),
                     'America/Santa_Isabel': new Date(2011, 3, 5, 8, 0, 0, 0),
-                    'America/Havana':       new Date(2012, 2, 10, 2, 0, 0, 0),
-                    'America/New_York':     new Date(2012, 2, 10, 7, 0, 0, 0),
-                    'Europe/Helsinki':      new Date(2013, 2, 31, 5, 0, 0, 0),
-                    'Pacific/Auckland':     new Date(2011, 8, 26, 7, 0, 0, 0),
-                    'Pacific/Fiji':         new Date(2010, 10, 29, 23, 0, 0, 0),
-                    'America/Halifax':      new Date(2011, 2, 13, 6, 0, 0, 0),
-                    'America/Goose_Bay':    new Date(2011, 2, 13, 2, 1, 0, 0),
-                    'America/Miquelon':     new Date(2011, 2, 13, 5, 0, 0, 0),
-                    'America/Godthab':      new Date(2011, 2, 27, 1, 0, 0, 0),
+                    'America/Havana': new Date(2012, 2, 10, 2, 0, 0, 0),
+                    'America/New_York': new Date(2012, 2, 10, 7, 0, 0, 0),
+                    'Europe/Helsinki': new Date(2013, 2, 31, 5, 0, 0, 0),
+                    'Pacific/Auckland': new Date(2011, 8, 26, 7, 0, 0, 0),
+                    'America/Halifax': new Date(2011, 2, 13, 6, 0, 0, 0),
+                    'America/Goose_Bay': new Date(2011, 2, 13, 2, 1, 0, 0),
+                    'America/Miquelon': new Date(2011, 2, 13, 5, 0, 0, 0),
+                    'America/Godthab': new Date(2011, 2, 27, 1, 0, 0, 0),
                     'Europe/Moscow': ru_pre_dst_change,
                     'Asia/Amman': new Date(2013, 2, 29, 1, 0, 0, 0),
                     'Asia/Beirut': new Date(2013, 2, 31, 2, 0, 0, 0),
                     'Asia/Damascus': new Date(2013, 3, 6, 2, 0, 0, 0),
                     'Asia/Jerusalem': new Date(2013, 2, 29, 5, 0, 0, 0),
-                    'Asia/Nicosia': new Date(2013, 2, 31, 3, 1, 0, 0),
                     'Asia/Yekaterinburg': ru_pre_dst_change,
                     'Asia/Omsk': ru_pre_dst_change,
                     'Asia/Krasnoyarsk': ru_pre_dst_change,
@@ -159,8 +160,11 @@
                     'Asia/Baku': new Date(2013, 2, 31, 4, 0, 0),
                     'Asia/Yerevan': new Date(2013, 2, 31, 3, 0, 0),
                     'Asia/Kamchatka': ru_pre_dst_change,
+                    'Asia/Gaza': new Date(2010, 2, 27, 4, 0, 0),
+                    'Africa/Cairo': new Date(2010, 4, 1, 3, 0, 0),
                     'Europe/Minsk': ru_pre_dst_change,
                     'Pacific/Apia': new Date(2010, 10, 1, 1, 0, 0, 0),
+                    'Pacific/Fiji': new Date(2010, 11, 1, 0, 0, 0),
                     'Australia/Perth': new Date(2008, 10, 1, 1, 0, 0, 0)
                 };
 
@@ -191,7 +195,7 @@
               'America/Chicago':      ['America/Chicago', 'America/Mexico_City'],
               'America/Santiago':     ['America/Santiago', 'America/Asuncion', 'America/Campo_Grande'],
               'America/Montevideo':   ['America/Montevideo', 'America/Sao_Paulo'],
-              'Asia/Beirut':          ['Asia/Amman', 'Asia/Jerusalem', 'Asia/Beirut', 'Asia/Nicosia', 'Europe/Helsinki','Asia/Damascus'],
+              'Asia/Beirut':          ['Asia/Amman', 'Asia/Jerusalem', 'Asia/Beirut', 'Europe/Helsinki','Asia/Damascus'],
               'Pacific/Auckland':     ['Pacific/Auckland', 'Pacific/Fiji'],
               'America/Los_Angeles':  ['America/Los_Angeles', 'America/Santa_Isabel'],
               'America/New_York':     ['America/Havana', 'America/New_York'],
@@ -204,10 +208,11 @@
               'Asia/Tokyo':           ['Asia/Irkutsk'],
               'Australia/Brisbane':   ['Asia/Yakutsk'],
               'Pacific/Noumea':       ['Asia/Vladivostok'],
-              'Pacific/Tarawa':       ['Asia/Kamchatka'],
+              'Pacific/Tarawa':       ['Asia/Kamchatka', 'Pacific/Fiji'],
               'Pacific/Tongatapu':    ['Pacific/Apia'],
               'Asia/Baghdad':         ['Europe/Minsk'],
-              'Asia/Baku':            ['Asia/Yerevan','Asia/Baku']
+              'Asia/Baku':            ['Asia/Yerevan','Asia/Baku'],
+              'Africa/Johannesburg':  ['Asia/Gaza', 'Africa/Cairo']
           },
 
           timezone_name = tz_name,
