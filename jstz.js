@@ -22,7 +22,9 @@
   var jstz = (function () {
       'use strict';
       var HEMISPHERE_SOUTH = 's',
-
+          
+          /* This is the year used to do primary checkups */
+          REFERENCE_YEAR = 2011,
           /**
            * Gets the offset in minutes from UTC for a certain date.
            * @param {Date} date
@@ -71,17 +73,20 @@
 
           /**
            * This function does some basic calculations to create information about
-           * the user's timezone.
+           * the user's timezone. It uses REFERENCE_YEAR as a solid year for which
+           * the script has been tested rather than depend on the year set by the
+           * client device.
            *
            * Returns a key that can be used to do lookups in jstz.olson.timezones.
+           * eg: "720,1,2". 
            *
            * @returns {String}
            */
 
           lookup_key = function () {
-              var january_offset = get_january_offset(),
-                  june_offset = get_june_offset(),
-                  diff = get_january_offset() - get_june_offset();
+              var january_offset = get_january_offset(REFERENCE_YEAR),
+                  june_offset = get_june_offset(REFERENCE_YEAR),
+                  diff = january_offset - june_offset;
 
               if (diff < 0) {
                   return january_offset + ",1";
@@ -104,7 +109,7 @@
               var key = lookup_key();
               return new jstz.TimeZone(jstz.olson.timezones[key]);
           },
-          
+
           /**
            * This object contains information on when daylight savings starts for
            * different timezones.
@@ -140,7 +145,7 @@
                     'Asia/Gaza':            new Date(2009, 2, 28, 0, 30, 0, 0),
                     'Africa/Cairo':         new Date(2009, 3, 25, 0, 30, 0, 0),
                     'Pacific/Auckland':     new Date(2011, 8, 26, 7, 0, 0, 0),
-                    'Pacific/Fiji':         new Date(2010, 11, 29, 23, 0, 0, 0),
+                    'Pacific/Fiji':         new Date(2010, 10, 29, 23, 0, 0, 0),
                     'America/Halifax':      new Date(2011, 2, 13, 6, 0, 0, 0),
                     'America/Goose_Bay':    new Date(2011, 2, 13, 2, 1, 0, 0),
                     'America/Miquelon':     new Date(2011, 2, 13, 5, 0, 0, 0),
@@ -154,6 +159,7 @@
                     'Asia/Vladivostok':     ru_pre_dst_change,
                     'Asia/Kamchatka':       ru_pre_dst_change,
                     'Europe/Minsk':         ru_pre_dst_change,
+                    'Pacific/Apia':         new Date(2010, 10, 1, 1, 0, 0, 0),
                     'Australia/Perth':      new Date(2008, 10, 1, 1, 0, 0, 0)
                 };
 
@@ -201,6 +207,7 @@
               'Australia/Brisbane':   ['Asia/Yakutsk'],
               'Pacific/Noumea':       ['Asia/Vladivostok'],
               'Pacific/Tarawa':       ['Asia/Kamchatka'],
+              'Pacific/Tongatapu':    ['Pacific/Apia'],   
               'Africa/Johannesburg':  ['Asia/Gaza', 'Africa/Cairo'],
               'Asia/Baghdad':         ['Europe/Minsk']
           },
