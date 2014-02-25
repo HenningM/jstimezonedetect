@@ -1,4 +1,6 @@
 *~
 *.pyc
+*.swp
+node_modules/
 .settings
 .project
