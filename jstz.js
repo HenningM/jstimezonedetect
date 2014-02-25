@@ -305,7 +305,7 @@
       '-120,1'   : 'America/Noronha',
       '-60,1'    : 'Atlantic/Azores',
       '-60,0'    : 'Atlantic/Cape_Verde',
-      '0,0'      : 'UTC',
+      '0,0'      : 'Etc/UTC',
       '0,1'      : 'Europe/London',
       '60,1'     : 'Europe/Berlin',
       '60,0'     : 'Africa/Lagos',
