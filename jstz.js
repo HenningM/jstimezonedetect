@@ -100,6 +100,20 @@
               return january_offset + ",0";
           },
 
+
+          /**
+           * Tries to get the time zone key directly from the operating system for those
+           * environments that support the ECMAScript Internationalization API.
+           */
+          get_from_intl = function() {
+            if (typeof Intl === "undefined" || typeof Intl.DateTimeFormat === "undefined")
+                return;
+            var format = Intl.DateTimeFormat();
+            if (typeof format === "undefined" || typeof format.resolvedOptions === "undefined")
+                return;
+            return format.resolvedOptions().timeZone;
+          },
+
           /**
            * Uses get_timezone_info() to formulate a key to use in the olson.timezones dictionary.
            *
@@ -109,6 +123,12 @@
            * @returns Object
            */
           determine = function () {
+
+              // first try to use the Intl API
+              var zone = get_from_intl();
+              if (zone) return new jstz.TimeZone(zone);
+
+              // otherwise, use our own logic
               var key = lookup_key();
               return new jstz.TimeZone(jstz.olson.timezones[key]);
           },
@@ -305,7 +325,7 @@
       '-120,1'   : 'America/Noronha',
       '-60,1'    : 'Atlantic/Azores',
       '-60,0'    : 'Atlantic/Cape_Verde',
-      '0,0'      : 'Etc/UTC',
+      '0,0'      : 'UTC',
       '0,1'      : 'Europe/London',
       '60,1'     : 'Europe/Berlin',
       '60,0'     : 'Africa/Lagos',
