@@ -2,7 +2,7 @@
  * This script gives you the zone info key representing your device's time zone setting.
  *
  * @name jsTimezoneDetect
- * @version 1.0.5
+ * @version 1.0.6
  * @author Jon Nylander
  * @license MIT License - http://www.opensource.org/licenses/mit-license.php
  *
@@ -22,7 +22,7 @@
   var jstz = (function () {
       'use strict';
       var HEMISPHERE_SOUTH = 's',
-          
+
           /**
            * Gets the offset in minutes from UTC for a certain date.
            * @param {Date} date
@@ -61,12 +61,12 @@
            */
           date_is_dst = function (date) {
               var is_southern = date.getMonth() > 7,
-                  base_offset = is_southern ? get_june_offset(date.getFullYear()) : 
+                  base_offset = is_southern ? get_june_offset(date.getFullYear()) :
                                               get_january_offset(date.getFullYear()),
                   date_offset = get_date_offset(date),
                   is_west = base_offset < 0,
                   dst_offset = base_offset - date_offset;
-                  
+
               if (!is_west && !is_southern) {
                   return dst_offset < 0;
               }
@@ -81,7 +81,7 @@
            * client device.
            *
            * Returns a key that can be used to do lookups in jstz.olson.timezones.
-           * eg: "720,1,2". 
+           * eg: "720,1,2".
            *
            * @returns {String}
            */
@@ -174,7 +174,7 @@
       return {
           determine: determine,
           date_is_dst: date_is_dst,
-          dst_start_for: dst_start_for 
+          dst_start_for: dst_start_for
       };
   }());
 
@@ -216,7 +216,7 @@
           },
 
           timezone_name = tz_name,
-          
+
           /**
            * Checks if a timezone has possible ambiguities. I.e timezones that are similar.
            *
