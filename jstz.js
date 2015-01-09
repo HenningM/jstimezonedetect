@@ -313,7 +313,7 @@
       '120,1'    : 'Asia/Beirut',
       '120,0'    : 'Africa/Johannesburg',
       '180,0'    : 'Asia/Baghdad',
-      '180,1'    : 'Europe/Moscow',
+      '180,0'    : 'Europe/Moscow',
       '210,1'    : 'Asia/Tehran',
       '240,0'    : 'Asia/Dubai',
       '240,1'    : 'Asia/Baku',
