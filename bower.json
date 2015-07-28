@@ -9,5 +9,6 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "license": "MIT"
 }
